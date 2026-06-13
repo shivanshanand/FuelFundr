@@ -4,6 +4,20 @@ import WalletTransaction from "../models/WalletTransaction.js";
 import { evaluateAndAssignBadges } from "../utils/evaluateBadges.js";
 import crypto from "crypto";
 import Payment from "../models/Payment.js";
+import { v2 as cloudinary } from "cloudinary";
+
+const uploadToCloudinary = (buffer) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "campaign_images" },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      },
+    );
+    stream.end(buffer);
+  });
+};
 
 export const createCampaign = async (req, res) => {
   try {
@@ -27,7 +41,12 @@ export const createCampaign = async (req, res) => {
     const userBefore = await User.findById(req.userId);
     const badgesBefore = userBefore.badges ? [...userBefore.badges] : [];
 
-    const imageUrl = req.file?.path || "";
+    let imageUrl = "";
+
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer);
+      imageUrl = result.secure_url;
+    }
 
     const newCampaign = new Campaign({
       title,
@@ -70,7 +89,7 @@ export const getCampaignById = async (req, res) => {
   try {
     const campaign = await Campaign.findById(req.params.id).populate(
       "createdBy",
-      "name email bio badges"
+      "name email bio badges",
     );
     if (!campaign)
       return res.status(404).json({ message: "Campaign not found" });

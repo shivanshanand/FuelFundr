@@ -6,6 +6,14 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    googleId: {   // ✅ ADD THIS
+    type: String,
+    default: null,
+  },
+  avatar: {     // optional but recommended
+    type: String,
+    default: "",
+  },
     email: {
       type: String,
       required: true,
@@ -13,7 +21,9 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.googleId; // password required ONLY if not Google user
+      },
     },
     walletBalance: { type: Number, default: 0 },
     totalDonated: { type: Number, default: 0 },

@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Upload, AlertCircle } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -9,6 +9,9 @@ const DetailsStep = ({
 }) => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
+  const [aiLoading, setAiLoading] = useState(false);
+  const [tone, setTone] = useState("Inspiring");
+  const [length, setLength] = useState("medium");
 
   // Validation
   const validateDetails = (data) => {
@@ -69,6 +72,42 @@ const DetailsStep = ({
     }
   };
 
+  const handleRewrite = async () => {
+    try {
+      if (!campaignData.description || campaignData.description.length < 20) {
+        toast.error("Write something first before using AI ✨");
+        return;
+      }
+
+      setAiLoading(true);
+
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/ai/rewrite`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          description: campaignData.description,
+          tone,
+          length,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message);
+
+      updateCampaignData("description", data.content);
+
+      toast.success("✨ AI just upgraded your description!");
+    } catch (err) {
+      toast.error(err.message || "AI failed");
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   const showError = (field) => touched[field] && errors[field];
 
   const ErrorMessage = ({ message }) => (
@@ -94,6 +133,7 @@ const DetailsStep = ({
         <label className="block text-blue-900 dark:text-green-200 font-semibold mb-3">
           Campaign Description <span className="text-red-400">*</span>
         </label>
+
         <textarea
           placeholder="Provide a detailed description of your campaign, including goals, timeline, and impact (minimum 50 characters)"
           value={campaignData.description}
@@ -112,23 +152,62 @@ const DetailsStep = ({
             focus:outline-none
           `}
         />
+
         <div className="flex flex-col sm:flex-row justify-between items-center mt-2 gap-2 sm:gap-0">
           <div>
             {showError("description") && (
               <ErrorMessage message={errors.description} />
             )}
           </div>
+
           <div
             className={`text-sm ${
               campaignData.description.length < 50
                 ? "text-red-400"
                 : campaignData.description.length < 100
-                ? "text-yellow-500"
-                : "text-gray-400 dark:text-gray-300"
+                  ? "text-yellow-500"
+                  : "text-gray-400 dark:text-gray-300"
             }`}
           >
             {campaignData.description.length} characters
           </div>
+        </div>
+
+        <div className="flex gap-4 mt-3">
+          {/* Tone */}
+          <select
+            value={tone}
+            onChange={(e) => setTone(e.target.value)}
+            className="px-3 py-2 rounded-lg border"
+          >
+            <option>Inspiring</option>
+            <option>Professional</option>
+            <option>Casual and friendly</option>
+            <option>Urgency-driven</option>
+            <option>Storytelling</option>
+          </select>
+
+          {/* Length */}
+          <select
+            value={length}
+            onChange={(e) => setLength(e.target.value)}
+            className="px-3 py-2 rounded-lg border"
+          >
+            <option value="short">Short</option>
+            <option value="medium">Medium</option>
+            <option value="long">Long</option>
+          </select>
+        </div>
+
+        <div className="flex justify-end mt-2">
+          <button
+            type="button"
+            onClick={handleRewrite}
+            disabled={aiLoading}
+            className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow hover:opacity-90 disabled:opacity-50"
+          >
+            {aiLoading ? "Rewriting..." : "✨ Rewrite with AI"}
+          </button>
         </div>
       </div>
 
