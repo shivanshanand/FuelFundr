@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock, Loader } from "lucide-react";
+import { Mail, Lock, Loader, Chrome } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/ui/Input";
 import { useAuthStore } from "../../store/authStore";
@@ -32,6 +32,10 @@ const Login = () => {
     } catch (error) {
       toast.error("Login failed. Please check your credentials.");
     }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
   };
 
   return (
@@ -84,6 +88,36 @@ const Login = () => {
                 "Login"
               )}
             </motion.button>
+
+            <div className="relative my-6">
+  <div className="absolute inset-0 flex items-center">
+    <div className="w-full border-t border-gray-300 dark:border-gray-700" />
+  </div>
+  <div className="relative flex justify-center text-sm">
+    <span className="px-3 bg-white dark:bg-slate-900 text-gray-500">
+      or continue with
+    </span>
+  </div>
+</div>
+
+<motion.button
+  type="button" 
+  whileHover={{ scale: 1.02 }}
+  whileTap={{ scale: 0.97 }}
+  onClick={handleGoogleLogin}
+  className="w-full flex items-center justify-center gap-3 py-3 px-4 
+             rounded-xl font-semibold shadow-md border 
+             border-gray-300 dark:border-slate-700
+             bg-white dark:bg-slate-800 
+             hover:bg-gray-50 dark:hover:bg-slate-700
+             transition-all duration-200"
+>
+  <Chrome className="w-5 h-5 text-red-500" />
+  <span className="text-gray-700 dark:text-gray-200">
+    Continue with Google
+  </span>
+</motion.button>
+
           </form>
         </div>
         <div className="px-8 py-4 bg-blue-50 dark:bg-slate-800 flex justify-center border-t border-blue-200 dark:border-slate-700">

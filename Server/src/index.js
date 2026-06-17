@@ -9,6 +9,8 @@ import walletRoutes from "./routes/walletRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import leaderboardRoutes from "./routes/leaderboardRoutes.js";
 import statsRoutes from "./routes/statsRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
+import passport from "./config/passport.js";
 
 dotenv.config();
 const app = express();
@@ -22,6 +24,8 @@ app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 // Connect to database
 connectDB();
 
+app.use(passport.initialize());
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/campaigns", campaignRoutes);
@@ -29,7 +33,7 @@ app.use("/api/wallet", walletRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/leaderboard", leaderboardRoutes);
 app.use("/api/stats", statsRoutes);
-app.use("/api/payment", paymentRoutes);
+app.use("/api/ai", aiRoutes);
 
 // Default Route
 app.get("/", (req, res) => {

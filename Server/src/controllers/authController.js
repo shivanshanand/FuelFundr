@@ -42,8 +42,6 @@ export const registerUser = async (req, res) => {
 
     generateToken(res, user._id);
 
-    await sendVerificationEmail(user.email, verificationToken);
-
     res.status(201).json({
       success: true,
       message: "User created successfully",
@@ -101,6 +99,12 @@ export const loginUser = async (req, res) => {
 
     if (!user.isVerified)
       return res.status(401).json({ message: "Please verify your email." });
+
+    if (!user.password) {
+      return res.status(400).json({
+        message: "This account uses Google login",
+      });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)

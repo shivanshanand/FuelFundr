@@ -1,4 +1,5 @@
 import express from "express";
+import passport from "passport";
 import {
   registerUser,
   verifyEmail,
@@ -11,8 +12,30 @@ import {
   updateUserProfile,
 } from "../controllers/authController.js";
 import { protect } from "../middleware/authMiddleware.js";
+import generateToken from "../utils/generateToken.js";
 
 const router = express.Router();
+
+// Step 1: Redirect to Google
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+// Step 2: Callback
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: "/login",
+  }),
+  (req, res) => {
+    // You can generate JWT here
+    generateToken(res, req.user._id);
+
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+  }
+);
 
 router.get("/check-auth", protect, checkAuth);
 router.patch("/profile", protect, updateUserProfile);

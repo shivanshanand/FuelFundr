@@ -1,0 +1,54 @@
+openapi: 3.0.1
+
+info:
+  title: FuelFundr Payment API
+  version: 1.0.0
+
+paths:
+  /api/payment/create-order:
+    post:
+      summary: Create Razorpay Order
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+              properties:
+                amount:
+                  type: number
+                  example: 500
+
+      responses:
+        "200":
+          description: Razorpay Order
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  amount:
+                    type: number
+                  currency:
+                    type: string
+                  receipt:
+                    type: string
+                  status:
+                    type: string
+
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string

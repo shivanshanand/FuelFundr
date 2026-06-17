@@ -82,6 +82,11 @@ const CampaignDetails = () => {
 
   const [creatorTotalDonated, setCreatorTotalDonated] = useState(0);
 
+  const isCampaignEnded =
+    new Date(deadline) < new Date() ||
+    currentCampaign.status === "fulfilled" ||
+    currentCampaign.status === "closed";
+
   useEffect(() => {
     if (createdBy?._id) {
       axios
@@ -98,6 +103,12 @@ const CampaignDetails = () => {
 
   const handleDonate = async (e) => {
     e.preventDefault();
+
+    if (isCampaignEnded) {
+      toast.error("This campaign has ended.");
+      return;
+    }
+
     if (amount > 0) {
       setDonationLoading(true);
 
@@ -350,7 +361,7 @@ const CampaignDetails = () => {
                   <span className="text-3xl font-bold text-green-500 flex items-center gap-1">
                     {Math.max(
                       0,
-                      Math.ceil((new Date(deadline) - new Date()) / 86400000)
+                      Math.ceil((new Date(deadline) - new Date()) / 86400000),
                     )}
                   </span>
                   <span className="text-base text-gray-500 dark:text-gray-300 font-medium">
@@ -371,15 +382,21 @@ const CampaignDetails = () => {
             </div>
           )}
 
-          {currentCampaign.status === "fulfilled" ||
-          currentCampaign.status === "closed" ? (
-            <button
-              className="w-full py-3 mt-1 rounded-xl font-semibold text-white text-lg bg-gray-400 cursor-not-allowed"
-              disabled
-              type="button"
-            >
-              Funding Complete
-            </button>
+          {isCampaignEnded ? (
+            <>
+              <button
+                className="w-full py-3 mt-1 rounded-xl font-semibold text-white text-lg bg-gray-500 cursor-not-allowed"
+                disabled
+                type="button"
+              >
+                Campaign ended on {new Date(deadline).toLocaleDateString()}
+              </button>
+
+              {/* Optional: Overlay feel */}
+              <div className="text-center text-sm text-gray-400 mt-2">
+                Donations are no longer accepted
+              </div>
+            </>
           ) : (
             <>
               {isOwner ? (
@@ -417,8 +434,16 @@ const CampaignDetails = () => {
                     {[100, 500, 1000].map((amt) => (
                       <button
                         key={amt}
-                        onClick={() => setAmount(amt)}
-                        className="flex-1 py-1 text-md font-bold rounded-xl bg-blue-100/70 dark:bg-slate-900 text-blue-900 dark:text-white border border-blue-200 dark:border-slate-700 hover:bg-blue-200 dark:hover:bg-slate-800 transition shadow"
+                        onClick={() => !isCampaignEnded && setAmount(amt)}
+                        disabled={isCampaignEnded}
+                        className={`flex-1 py-1 text-md font-bold rounded-xl 
+    bg-blue-100/70 dark:bg-slate-900 text-blue-900 dark:text-white 
+    border border-blue-200 dark:border-slate-700 shadow transition
+    ${
+      isCampaignEnded
+        ? "opacity-50 cursor-not-allowed"
+        : "hover:bg-blue-200 dark:hover:bg-slate-800"
+    }`}
                         type="button"
                       >
                         ₹{amt}
@@ -427,15 +452,25 @@ const CampaignDetails = () => {
                   </div>
                   <input
                     type="number"
-                    placeholder="Enter amount"
+                    placeholder={
+                      isCampaignEnded ? "Campaign Ended" : "Enter amount"
+                    }
                     value={amount}
                     min={1}
+                    disabled={isCampaignEnded}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="flex-1 px-3 py-2 text-base rounded-xl bg-blue-100/70 dark:bg-slate-900 text-blue-900 dark:text-white border border-blue-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-green-300 shadow"
+                    className={`flex-1 px-3 py-2 text-base rounded-xl 
+    bg-blue-100/70 dark:bg-slate-900 text-blue-900 dark:text-white 
+    border border-blue-200 dark:border-slate-700 outline-none shadow
+    ${
+      isCampaignEnded
+        ? "opacity-50 cursor-not-allowed"
+        : "focus:ring-2 focus:ring-green-300"
+    }`}
                   />
                   <button
                     onClick={handleDonate}
-                    disabled={donationLoading}
+                    disabled={donationLoading || isCampaignEnded}
                     className={`w-full py-3 mt-1 rounded-xl font-semibold text-white text-lg bg-gradient-to-r from-green-400 via-blue-400 to-blue-700 hover:from-green-500 hover:to-blue-800 shadow tracking-wide transition-all ${
                       donationLoading ? "opacity-50 cursor-not-allowed" : ""
                     }`}
