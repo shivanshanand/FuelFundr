@@ -33,7 +33,7 @@ app.use("/api/wallet", walletRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/leaderboard", leaderboardRoutes);
 app.use("/api/stats", statsRoutes);
-app.use("/api/ai",aiRoutes)
+app.use("/api/ai", aiRoutes);
 
 // Default Route
 app.get("/", (req, res) => {

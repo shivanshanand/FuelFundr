@@ -5,7 +5,13 @@
   "main": "Server/src/index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon src/index.js"
+    "start": "nodemon src/index.js",
+    "spec:stub:campaign": "specmatic stub contracts/campaign-api.yaml",
+    "spec:stub:auth": "specmatic stub contracts/auth-api.yaml",
+    "spec:stub:payment": "specmatic stub contracts/payment-api.yaml",
+    "spec:test:campaign": "specmatic test contracts/campaign-api.yaml --testBaseURL=http://localhost:2727",
+    "spec:test:auth": "specmatic test contracts/auth-api.yaml --testBaseURL=http://localhost:2727",
+    "spec:test:payment": "specmatic test contracts/payment-api.yaml --testBaseURL=http://localhost:2727"
   },
   "keywords": [
     "Capstone",
@@ -33,5 +39,8 @@
     "passport-google-oauth20": "^2.0.0",
     "razorpay": "^2.9.6",
     "resend": "^4.7.0"
+  },
+  "devDependencies": {
+    "specmatic": "^2.46.5"
   }
 }

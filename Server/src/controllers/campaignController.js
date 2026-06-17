@@ -79,6 +79,18 @@ export const createCampaign = async (req, res) => {
 export const getAllCampaigns = async (req, res) => {
   try {
     const campaigns = await Campaign.find().populate("createdBy", "name email");
+    
+    const modifiedCampaigns = campaigns.map((campaign) => {
+      const obj = campaign.toObject();
+
+      delete obj.title;
+
+      return {
+        ...obj,
+        campaignTitle: campaign.title,
+      };
+    });
+
     res.status(200).json(campaigns);
   } catch (error) {
     res.status(500).json({ message: "Error fetching campaigns", error });

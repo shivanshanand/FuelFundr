@@ -1,0 +1,86 @@
+openapi: 3.0.1
+
+info:
+  title: FuelFundr Campaign API
+  version: 1.0.0
+
+paths:
+  /api/campaigns:
+    get:
+      summary: Get all campaigns
+
+      responses:
+        "200":
+          description: Campaign list
+
+          content:
+            application/json:
+              schema:
+                type: array
+
+                items:
+                  type: object
+
+                  required:
+                    - _id
+                    - title
+                    - description
+                    - targetAmount
+                    - amountRaised
+                    - status
+                    - category
+
+                  properties:
+                    _id:
+                      type: string
+
+                    title:
+                      type: string
+
+                    description:
+                      type: string
+
+                    targetAmount:
+                      type: number
+
+                    amountRaised:
+                      type: number
+
+                    amountWithdrawn:
+                      type: number
+
+                    deadline:
+                      type: string
+
+                    status:
+                      type: string
+
+                    category:
+                      type: string
+
+                    image:
+                      type: string
+
+                    createdBy:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+
+                    donors:
+                      type: array
+                      items:
+                        type: object
+                    
+                    createdAt:
+                      type: string
+
+                    updatedAt:
+                      type: string
+                    
+                    __v:
+                      type: number
