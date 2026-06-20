@@ -11,7 +11,9 @@
     "spec:stub:payment": "specmatic stub contracts/payment-api.yaml",
     "spec:test:campaign": "specmatic test contracts/campaign-api.yaml --testBaseURL=http://localhost:2727",
     "spec:test:auth": "specmatic test contracts/auth-api.yaml --testBaseURL=http://localhost:2727",
-    "spec:test:payment": "specmatic test contracts/payment-api.yaml --testBaseURL=http://localhost:2727"
+    "spec:test:payment": "specmatic test contracts/payment-api.yaml --testBaseURL=http://localhost:2727",
+    "spec:test": "specmatic test contracts/*.yaml --testBaseURL=http://localhost:2727",
+    "spec:stub": "specmatic stub contracts/*.yaml"
   },
   "keywords": [
     "Capstone",

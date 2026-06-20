@@ -15,26 +15,32 @@ paths:
           application/json:
             schema:
               type: object
+
               required:
                 - name
                 - email
                 - password
+
               properties:
                 name:
                   type: string
+                  minLength: 3
+                  maxLength: 50
                   example: Shivansh Anand
 
                 email:
                   type: string
-                  example: shivanshanand962@gmail.com
+                  format: email
+                  example: shiva567@gmail.com
 
                 password:
                   type: string
+                  minLength: 8
                   example: Password123
 
       responses:
         "201":
-          description: User created
+          description: User created successfully
 
           content:
             application/json:
@@ -57,43 +63,54 @@ paths:
 
       requestBody:
         required: true
+
         content:
           application/json:
             schema:
               type: object
+
               required:
                 - email
                 - password
+
               properties:
                 email:
                   type: string
+                  format: email
+
                 password:
                   type: string
-            examples:
-                validLogin:
-                  value:
-                    email: shiv123@test.com
-                    password: Shiv@123!!
+                  minLength: 8
 
       responses:
         "200":
           description: Login Success
+
           content:
             application/json:
               schema:
                 type: object
+
                 properties:
                   success:
                     type: boolean
+
                   message:
                     type: string
 
         "401":
           description: User not found or invalid credentials
+
           content:
             application/json:
               schema:
                 type: object
+
                 properties:
                   message:
                     type: string
+
+              examples:
+                invalidCredentials:
+                  value:
+                    message: User not found
