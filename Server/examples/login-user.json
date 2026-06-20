@@ -1,0 +1,20 @@
+{
+  "http-request": {
+    "path": "/api/auth/login",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "email": "shivansh@test.com",
+      "password": "Password123"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "success": true,
+      "message": "Login successful"
+    }
+  }
+}

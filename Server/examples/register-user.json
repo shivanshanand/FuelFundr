@@ -1,0 +1,21 @@
+{
+  "http-request": {
+    "path": "/api/auth/register",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "name": "Shivansh Anand",
+      "email": "shivansh@test.com",
+      "password": "Password123"
+    }
+  },
+  "http-response": {
+    "status": 201,
+    "body": {
+      "success": true,
+      "message": "User created"
+    }
+  }
+}

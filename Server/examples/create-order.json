@@ -1,0 +1,22 @@
+{
+  "http-request": {
+    "path": "/api/payment/create-order",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "amount": 500
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "id": "order_123",
+      "amount": 500,
+      "currency": "INR",
+      "receipt": "receipt_123",
+      "status": "created"
+    }
+  }
+}

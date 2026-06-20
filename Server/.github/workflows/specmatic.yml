@@ -1,0 +1,22 @@
+name: Specmatic Contract Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  contract-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - run: npm run spec:test:auth
+      - run: npm run spec:test:campaign
+      - run: npm run spec:test:payment

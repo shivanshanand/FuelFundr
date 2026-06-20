@@ -42,9 +42,11 @@ paths:
 
                     targetAmount:
                       type: number
+                      minimum: 100
 
                     amountRaised:
                       type: number
+                      minimum: 0
 
                     amountWithdrawn:
                       type: number

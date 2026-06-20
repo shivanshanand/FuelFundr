@@ -1,0 +1,20 @@
+{
+  "http-request": {
+    "path": "/api/campaigns",
+    "method": "GET"
+  },
+  "http-response": {
+    "status": 200,
+    "body": [
+      {
+        "_id": "123",
+        "title": "AI Startup",
+        "description": "Funding MVP",
+        "targetAmount": 50000,
+        "amountRaised": 10000,
+        "status": "active",
+        "category": "Technology"
+      }
+    ]
+  }
+}
