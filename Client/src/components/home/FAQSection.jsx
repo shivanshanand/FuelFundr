@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ChevronDown, HelpCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const faqs = [
   {
@@ -42,47 +43,59 @@ const FAQSection = () => {
   const [openIdx, setOpenIdx] = useState(null);
 
   return (
-    <section className="w-full max-w-2xl sm:max-w-3xl mx-auto px-2 sm:px-3 py-12 sm:py-16 flex flex-col items-center">
-      <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold mb-8 sm:mb-10 text-center bg-gradient-to-r from-green-600 to-blue-400 bg-clip-text text-transparent">
+    <section className="w-full max-w-3xl mx-auto px-6 py-20 flex flex-col items-center select-none">
+      <motion.h2
+        initial={{ opacity: 0, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.5 }}
+        className="text-3xl md:text-4xl font-black text-center text-slate-900 dark:text-white mb-14 tracking-tighter"
+      >
         Frequently Asked Questions
-      </h2>
-      <div className="w-full flex flex-col gap-3 sm:gap-4">
+      </motion.h2>
+
+      <div className="w-full flex flex-col gap-4">
         {faqs.map((faq, idx) => (
-          <div
+          <motion.div
             key={faq.question}
-            className="rounded-2xl border border-blue-100 dark:border-green-800 bg-white/90 dark:bg-slate-900/80 shadow-md transition"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.4, delay: idx * 0.05 }}
+            className="rounded-2xl border border-slate-200 dark:border-white/5 bg-white/50 dark:bg-[#0e121a]/50 shadow-sm overflow-hidden"
           >
             <button
-              className="flex items-center justify-between w-full px-4 sm:px-5 py-4 sm:py-5 focus:outline-none"
+              className="flex items-center justify-between w-full px-5 py-5 text-left focus:outline-none cursor-pointer"
               onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
               aria-expanded={openIdx === idx}
             >
-              <span className="flex items-center gap-2 font-bold text-blue-700 dark:text-green-300 text-base sm:text-lg text-left">
-                <HelpCircle className="w-6 h-6 text-green-400 shrink-0" />
+              <span className="flex items-center gap-3 font-bold text-slate-800 dark:text-slate-200 text-base sm:text-lg">
+                <HelpCircle className="w-5 h-5 text-indigo-500 shrink-0" />
                 {faq.question}
               </span>
               <ChevronDown
                 className={
-                  "w-6 h-6 ml-2 transition-transform duration-300 " +
-                  (openIdx === idx
-                    ? "rotate-180 text-green-400"
-                    : "text-blue-400")
+                  "w-5 h-5 text-slate-400 shrink-0 transition-transform duration-300 " +
+                  (openIdx === idx ? "rotate-180 text-indigo-500" : "")
                 }
               />
             </button>
-            <div
-              className={
-                "px-6 sm:px-8 pb-4 sm:pb-[1.15rem] text-base text-gray-600 dark:text-green-100 transition-all duration-300 overflow-hidden " +
-                (openIdx === idx
-                  ? "max-h-[400px] opacity-100"
-                  : "max-h-0 opacity-70 pointer-events-none")
-              }
-              style={{ transition: "all 0.4s cubic-bezier(.4,2,.6,1)" }}
-              aria-hidden={openIdx !== idx}
-            >
-              {openIdx === idx && <div>{faq.answer}</div>}
-            </div>
-          </div>
+
+            <AnimatePresence initial={false}>
+              {openIdx === idx && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                >
+                  <div className="px-6 pb-6 pt-1 text-slate-500 dark:text-slate-400 text-sm sm:text-base leading-relaxed border-t border-slate-100 dark:border-slate-800/50">
+                    {faq.answer}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         ))}
       </div>
     </section>

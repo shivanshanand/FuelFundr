@@ -2,38 +2,35 @@ import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const AboutHeroSection = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
     
   return (
-    <section className="w-full bg-gradient-to-br from-blue-800 via-blue-900 to-green-900 dark:from-slate-900 dark:via-blue-950 dark:to-green-950 py-16 px-4 text-white flex flex-col items-center justify-center relative">
+    <section className="w-full bg-slate-50 dark:bg-slate-950/20 py-16 px-6 text-center flex flex-col items-center justify-center relative select-none">
+      {/* Back button */}
       <button
         onClick={() =>
           window.history.length > 1 ? navigate(-1) : navigate("/")
         }
-        className="absolute top-6 left-4 sm:top-8 sm:left-8 flex items-center gap-2 px-4 py-2
-          rounded-xl bg-gradient-to-r from-blue-700 to-green-400 text-white font-bold 
-          shadow-lg hover:from-blue-800 hover:to-green-700 transition text-base
-          border border-blue-300 dark:border-green-700
-          backdrop-blur-md
-        "
+        className="absolute top-6 left-6 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 hover:border-indigo-500 bg-white/50 dark:bg-slate-900/50 hover:bg-slate-100 dark:hover:bg-slate-850 text-slate-700 dark:text-slate-200 text-xs font-semibold cursor-pointer shadow-sm transition-all duration-200"
         title="Go Back"
       >
-        <ArrowLeft className="w-5 h-5" />
-        <span className="hidden sm:inline">Back</span>
+        <ArrowLeft className="w-3.5 h-3.5" />
+        <span>Back</span>
       </button>
+
       {/* Main Headline */}
-      <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-center mb-6 bg-gradient-to-r from-green-300 via-blue-200 to-green-500 bg-clip-text text-transparent drop-shadow-lg">
-        About <span className="text-white bg-none">Us</span>
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-2">
+        About Us
       </h1>
+      
       {/* Tagline */}
-      <p className="max-w-2xl mx-auto text-lg md:text-2xl text-center font-semibold opacity-95 mb-8">
-        Funding student dreams. Empowering change, one campaign at a time.
+      <p className="max-w-md mx-auto text-xs text-slate-500 dark:text-slate-400 font-mono uppercase tracking-widest leading-relaxed mb-6">
+        Funding student dreams. Empowering campus change-makers, one campaign at a time.
       </p>
-      {/* Optional: Brand Illustration */}
-      {/* <img src={AboutIllustration} className="mt-3 w-60 md:w-96 mx-auto" alt="About FuelFundr" /> */}
-      {/* Scroll cue */}
-      <div className="mt-4 flex flex-col items-center animate-bounce">
-        <span className="text-2xl text-green-300">↓</span>
+
+      {/* Down arrow cue */}
+      <div className="mt-4 flex flex-col items-center animate-bounce-custom">
+        <span className="text-sm font-bold text-slate-400">↓</span>
       </div>
     </section>
   );

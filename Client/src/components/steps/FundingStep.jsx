@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Users, AlertCircle } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -49,30 +49,32 @@ const FundingStep = ({ campaignData, updateCampaignData, onValidated }) => {
     }
   }, [touched, errors]);
 
+  const showError = (field) => touched[field] && errors[field];
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 select-none">
       <div>
-        <h2 className="text-2xl font-extrabold bg-gradient-to-r from-blue-700 to-green-400 bg-clip-text text-transparent mb-2">
+        <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-1">
           Funding Details
         </h2>
-        <p className="text-gray-600 dark:text-gray-300">
-          Set your funding goal and timeline
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          Set your campaign funding goal and deadline timeline
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Target Amount Input */}
-        <div>
-          <label className="block text-blue-900 dark:text-green-200 font-semibold mb-3">
-            Target Amount <span className="text-red-400">*</span>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* Target Amount */}
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+            Target Amount (INR) <span className="text-rose-500">*</span>
           </label>
           <div className="relative">
-            <span className="absolute left-3 top-3 text-gray-400 text-lg select-none pointer-events-none">
+            <span className="absolute left-3 top-2.5 text-slate-400 font-mono text-sm pointer-events-none select-none">
               ₹
             </span>
             <input
               type="number"
-              placeholder="Enter Target Amount"
+              placeholder="Goal Amount"
               min={1}
               value={campaignData.targetAmount}
               onChange={(e) =>
@@ -80,34 +82,29 @@ const FundingStep = ({ campaignData, updateCampaignData, onValidated }) => {
               }
               onBlur={() => setTouched((t) => ({ ...t, targetAmount: true }))}
               className={`
-                w-full pl-8 pr-4 py-3 rounded-xl shadow
-                bg-white/80 dark:bg-slate-900/80
-                text-blue-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
-                border-2 transition-all duration-200 text-lg
+                w-full pl-8 pr-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-950
+                text-slate-900 dark:text-white placeholder-slate-450 outline-none
+                border transition duration-150 text-sm font-mono
                 ${
-                  touched.targetAmount && errors.targetAmount
-                    ? "border-red-500 focus:ring-2 focus:ring-red-400"
-                    : "border-blue-200 dark:border-slate-700 focus:ring-2 focus:ring-green-300"
+                  showError("targetAmount")
+                    ? "border-rose-500 focus:ring-1 focus:ring-rose-500"
+                    : "border-slate-200 dark:border-white/10 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                 }
-                focus:outline-none
               `}
             />
           </div>
-          {touched.targetAmount && errors.targetAmount && (
-            <div className="flex items-center mt-2 text-red-500 text-sm">
-              <AlertCircle className="w-4 h-4 mr-1" />
-              {errors.targetAmount}
+          {showError("targetAmount") && (
+            <div className="flex items-center text-rose-500 text-xs font-semibold mt-1">
+              <AlertCircle className="w-3.5 h-3.5 mr-1" />
+              Goal amount is required
             </div>
           )}
-          <p className="mt-2 text-gray-500 dark:text-gray-400 text-sm">
-            Set a realistic funding goal
-          </p>
         </div>
 
-        {/* Deadline Input */}
-        <div>
-          <label className="block text-blue-900 dark:text-green-200 font-semibold mb-3">
-            Campaign Deadline <span className="text-red-400">*</span>
+        {/* Deadline */}
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+            Campaign Deadline <span className="text-rose-500">*</span>
           </label>
           <input
             type="date"
@@ -116,55 +113,45 @@ const FundingStep = ({ campaignData, updateCampaignData, onValidated }) => {
             onChange={(e) => updateCampaignData("deadline", e.target.value)}
             onBlur={() => setTouched((t) => ({ ...t, deadline: true }))}
             className={`
-              w-full px-4 py-3 rounded-xl shadow
-              bg-white/80 dark:bg-slate-900/80
-              text-blue-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
-              border-2 transition-all duration-200 text-lg appearance-none
+              w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-950
+              text-slate-900 dark:text-white placeholder-slate-450 outline-none
+              border transition duration-150 text-sm font-mono
               ${
-                touched.deadline && errors.deadline
-                  ? "border-red-500 focus:ring-2 focus:ring-red-400"
-                  : "border-blue-200 dark:border-slate-700 focus:ring-2 focus:ring-green-300"
+                showError("deadline")
+                  ? "border-rose-500 focus:ring-1 focus:ring-rose-500"
+                  : "border-slate-200 dark:border-white/10 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
               }
-              focus:outline-none
             `}
           />
-          {touched.deadline && errors.deadline && (
-            <div className="flex items-center mt-2 text-red-500 text-sm">
-              <AlertCircle className="w-4 h-4 mr-1" />
-              {errors.deadline}
+          {showError("deadline") && (
+            <div className="flex items-center text-rose-500 text-xs font-semibold mt-1">
+              <AlertCircle className="w-3.5 h-3.5 mr-1" />
+              Deadline date is required
             </div>
           )}
-          <p className="mt-2 text-gray-500 dark:text-gray-400 text-sm">
-            Please pick a future deadline (at least {MIN_DAYS_LATER} day
-            {MIN_DAYS_LATER > 1 ? "s" : ""} later)
-          </p>
         </div>
       </div>
 
-      {/* Funding Tips */}
-      <div className="bg-white/80 dark:bg-slate-900/80 rounded-xl p-5 sm:p-6 border border-blue-200 dark:border-slate-700 shadow">
-        <div className="flex items-center mb-3">
-          <Users className="w-5 h-5 text-green-400 mr-2" />
-          <h3 className="text-blue-900 dark:text-green-200 font-semibold">
+      {/* Tips Box */}
+      <div className="rounded-xl border border-slate-200/65 dark:border-white/5 bg-slate-50/50 dark:bg-slate-950/20 p-5 mt-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Users className="w-4 h-4 text-indigo-500" />
+          <h3 className="text-slate-800 dark:text-slate-200 font-bold text-xs">
             Funding Tips
           </h3>
         </div>
-        <ul className="space-y-2 text-blue-900 dark:text-green-100 text-sm">
+        <ul className="space-y-2 text-slate-500 dark:text-slate-400 text-xs leading-relaxed font-medium">
           <li className="flex items-start">
-            <span className="w-2 h-2 bg-green-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-            Set a realistic goal based on your actual needs
+            <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-1.5 mr-2.5 shrink-0" />
+            Set a realistic target based on your materials and project requirements
           </li>
           <li className="flex items-start">
-            <span className="w-2 h-2 bg-green-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-            Consider platform fees and payment processing costs
+            <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-1.5 mr-2.5 shrink-0" />
+            Shorter campaigns (30-45 days) usually build greater urgency and momentum
           </li>
           <li className="flex items-start">
-            <span className="w-2 h-2 bg-green-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-            Shorter campaigns often perform better (30-45 days)
-          </li>
-          <li className="flex items-start">
-            <span className="w-2 h-2 bg-green-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-            Have a plan for promoting your campaign
+            <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-1.5 mr-2.5 shrink-0" />
+            Ensure you have a promotion plan to share your campaign with your campus network
           </li>
         </ul>
       </div>

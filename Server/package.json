@@ -5,15 +5,7 @@
   "main": "Server/src/index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon src/index.js",
-    "spec:stub:campaign": "specmatic stub contracts/campaign-api.yaml",
-    "spec:stub:auth": "specmatic stub contracts/auth-api.yaml",
-    "spec:stub:payment": "specmatic stub contracts/payment-api.yaml",
-    "spec:test:campaign": "specmatic test contracts/campaign-api.yaml --testBaseURL=http://localhost:2727",
-    "spec:test:auth": "specmatic test contracts/auth-api.yaml --testBaseURL=http://localhost:2727",
-    "spec:test:payment": "specmatic test contracts/payment-api.yaml --testBaseURL=http://localhost:2727",
-    "spec:test": "specmatic test contracts/*.yaml --testBaseURL=http://localhost:2727",
-    "spec:stub": "specmatic stub contracts/*.yaml"
+    "start": "nodemon src/index.js"
   },
   "keywords": [
     "Capstone",
@@ -32,6 +24,7 @@
     "express-async-handler": "^1.2.0",
     "express-rate-limit": "^7.5.0",
     "groq-sdk": "^1.1.2",
+    "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1",
     "multer": "^2.1.1",
@@ -41,8 +34,5 @@
     "passport-google-oauth20": "^2.0.0",
     "razorpay": "^2.9.6",
     "resend": "^4.7.0"
-  },
-  "devDependencies": {
-    "specmatic": "^2.46.5"
   }
 }

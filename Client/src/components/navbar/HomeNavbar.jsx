@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserCircle2, Menu, X, ArrowDown } from "lucide-react";
+import { UserCircle2, Menu, X, ChevronDown } from "lucide-react";
 import { useAuthStore } from "../../store/authStore";
 import { getInitials } from "../../utils/initials";
 
@@ -11,7 +11,7 @@ const HomeNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileDropdown, setProfileDropdown] = useState(false);
 
-  // Dropdown close on outside
+  // Dropdown close on outside click
   useEffect(() => {
     function close(e) {
       if (
@@ -27,44 +27,43 @@ const HomeNavbar = () => {
   }, [profileDropdown]);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-white/60 dark:bg-slate-950/80 backdrop-blur-xl border-b border-blue-200/40 dark:border-green-900/30 shadow-md">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-5 py-3">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-white/75 dark:bg-slate-950/75 backdrop-blur-md border-b border-slate-200/50 dark:border-white/5 shadow-sm transition-colors duration-200">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         {/* Logo */}
         <Link
           to="/"
-          className="font-extrabold text-2xl tracking-tighter bg-gradient-to-r from-blue-600 to-green-400 bg-clip-text text-transparent flex items-center gap-2"
+          className="font-black text-2xl tracking-tighter text-slate-900 dark:text-white flex items-center gap-1 select-none"
         >
-          FuelFundr
+          FuelFundr<span className="text-indigo-500">.</span>
         </Link>
 
         {/* Desktop right side */}
         <div className="hidden md:flex items-center gap-6">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 relative">
             <button
               id="profile-dropdown-btn"
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-700 via-blue-800 to-green-500 border-2 border-blue-700 shadow hover:scale-105 transition"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 dark:border-white/10 hover:border-indigo-500 dark:hover:border-indigo-500 bg-white/50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-900 transition-all duration-200 shadow-sm cursor-pointer"
               onClick={() => setProfileDropdown(!profileDropdown)}
               title="Account"
-              style={{ minWidth: "32px", minHeight: "40px" }}
             >
               {isAuthenticated ? (
                 getInitials(user?.name) ? (
-                  <span className="text-lg md:text-xl font-extrabold text-white dark:text-green-200">
+                  <span className="w-7 h-7 flex items-center justify-center text-xs font-black rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 select-none">
                     {getInitials(user?.name)}
                   </span>
                 ) : (
-                  <UserCircle2 className="w-7 h-7 text-white" />
+                  <UserCircle2 className="w-6 h-6 text-slate-700 dark:text-slate-300" />
                 )
               ) : (
-                <UserCircle2 className="w-7 h-7 text-white" />
+                <UserCircle2 className="w-6 h-6 text-slate-700 dark:text-slate-300" />
               )}
-              <span className="font-bold text-white text-base ml-2">
+              <span className="font-semibold text-slate-700 dark:text-slate-200 text-sm ml-1 select-none">
                 {isAuthenticated
                   ? user?.name?.split(" ")[0] || "User"
                   : "Guest"}
               </span>
-              <ArrowDown
-                className={`w-5 h-5 mt-1 text-extrabold text-blue-400 dark:text-green-300 transition-transform duration-200 ${
+              <ChevronDown
+                className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
                   profileDropdown ? "rotate-180" : ""
                 }`}
               />
@@ -74,27 +73,30 @@ const HomeNavbar = () => {
             {profileDropdown && (
               <div
                 id="profile-dropdown-menu"
-                className="absolute right-7 top-16 mt-2 min-w-[180px] rounded-xl shadow-2xl bg-white dark:bg-slate-900 border border-blue-100 dark:border-slate-800 z-50 py-2"
+                className="absolute right-0 top-12 mt-2 w-48 rounded-xl shadow-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 z-50 py-2 animate-in fade-in slide-in-from-top-2 duration-150"
               >
                 <Link
                   to="/dashboard"
-                  className="flex px-5 py-2 text-blue-700 dark:text-green-200 font-bold hover:bg-blue-50 dark:hover:bg-blue-800 rounded-xl transition items-center gap-2"
+                  className="flex px-4 py-2 text-sm text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg mx-1 transition-colors"
                   onClick={() => setProfileDropdown(false)}
                 >
                   Dashboard
                 </Link>
                 <Link
                   to="/leaderboard"
-                  className="flex px-5 py-2 text-blue-700 dark:text-green-200 font-bold hover:bg-blue-50 dark:hover:bg-blue-800 rounded-xl transition items-center gap-2"
+                  className="flex px-4 py-2 text-sm text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg mx-1 transition-colors"
                   onClick={() => setProfileDropdown(false)}
                 >
                   Leaderboard
                 </Link>
                 {!isAuthenticated && (
-                  <div className="py-2 text-center">
+                  <div className="px-2 pt-2 border-t border-slate-100 dark:border-slate-800 mt-2">
                     <button
-                      onClick={() => navigate("/login")}
-                      className="w-full px-4 py-2 mt-2 bg-gradient-to-r from-blue-700 to-green-400 text-white font-bold rounded-md hover:from-blue-800 hover:to-green-500"
+                      onClick={() => {
+                        setProfileDropdown(false);
+                        navigate("/login");
+                      }}
+                      className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-lg transition shadow-sm cursor-pointer"
                     >
                       Login / Register
                     </button>
@@ -107,39 +109,22 @@ const HomeNavbar = () => {
 
         {/* Mobile nav controls */}
         <button
-          className="md:hidden flex items-center"
+          className="md:hidden flex items-center p-1 text-slate-700 dark:text-slate-300"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          {menuOpen ? (
-            <X className="w-7 h-7 text-blue-700 dark:text-green-400" />
-          ) : (
-            <Menu className="w-7 h-7 text-blue-700 dark:text-green-400" />
-          )}
+          {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
       {/* Mobile Drawer */}
       {menuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white/95 dark:bg-slate-950/95 border-t border-blue-200/30 shadow-xl transition-all z-50">
-          <div className="flex flex-col items-center gap-4 py-6">
+        <div className="md:hidden absolute top-full left-0 w-full bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 shadow-lg py-6 px-6 z-50 animate-in fade-in slide-in-from-top-3 duration-200">
+          <div className="flex flex-col items-center gap-4">
             <div className="flex items-center gap-3 w-full justify-center">
-              <button
-                className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-green-400 bg-gradient-to-r from-green-300/80 to-blue-400/60 shadow"
-                title="Account"
-              >
-                {isAuthenticated ? (
-                  getInitials(user?.name) ? (
-                    <span className="text-lg font-extrabold text-blue-700 dark:text-green-200">
-                      {getInitials(user?.name)}
-                    </span>
-                  ) : (
-                    <UserCircle2 className="w-7 h-7 text-blue-700 dark:text-green-200" />
-                  )
-                ) : (
-                  <UserCircle2 className="w-7 h-7 text-blue-700 dark:text-green-200" />
-                )}
-              </button>
-              <span className="font-bold text-blue-800 dark:text-green-200 text-lg">
+              <span className="w-10 h-10 flex items-center justify-center font-black rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 select-none">
+                {isAuthenticated ? getInitials(user?.name) || "U" : "G"}
+              </span>
+              <span className="font-bold text-slate-800 dark:text-slate-200 text-lg">
                 {isAuthenticated
                   ? user?.name?.split(" ")[0] || "User"
                   : "Guest"}
@@ -149,14 +134,14 @@ const HomeNavbar = () => {
             <Link
               to="/dashboard"
               onClick={() => setMenuOpen(false)}
-              className="px-6 py-2 mt-1 rounded-lg border-2 border-green-400 text-green-800 dark:text-green-200 font-bold bg-white/70 dark:bg-slate-900/80 hover:bg-green-100 dark:hover:bg-green-900 shadow transition"
+              className="w-full text-center px-6 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 font-semibold bg-white/50 dark:bg-slate-900/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
             >
               Dashboard
             </Link>
             <Link
               to="/leaderboard"
               onClick={() => setMenuOpen(false)}
-              className="px-6 py-2 rounded-lg border-2 border-blue-400 text-blue-800 dark:text-green-200 font-bold bg-white/80 dark:bg-slate-900/80 hover:bg-blue-100 dark:hover:bg-green-800 shadow transition flex items-center gap-2"
+              className="w-full text-center px-6 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 font-semibold bg-white/50 dark:bg-slate-900/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
             >
               Leaderboard
             </Link>
@@ -166,7 +151,7 @@ const HomeNavbar = () => {
                   setMenuOpen(false);
                   navigate("/login");
                 }}
-                className="w-full mt-2 px-7 py-2 rounded-xl bg-gradient-to-r from-blue-700 to-green-400 text-white font-bold shadow hover:from-blue-800 hover:to-green-500"
+                className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition shadow"
               >
                 Login / Register
               </button>

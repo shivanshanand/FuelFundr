@@ -12,6 +12,6 @@ const router = express.Router();
 router.get("/balance", protect, getWalletBalance);
 router.post("/add-funds", protect, addFundsToWallet);
 router.get("/transactions", protect, getWalletTransactions);
-router.get("/total-donated", protect, getTotalDonatedByUser);
+router.get("/total-donated", getTotalDonatedByUser);
 
 export default router;

@@ -26,7 +26,7 @@ const successStories = [
     story:
       "Ankita’s Youth4Change campaign on FuelFundr provided meals for 600 children. Donation tracking, secure payouts, and badges turned backers into repeat supporters!",
     imgSrc: "https://randomuser.me/api/portraits/women/44.jpg",
-    stars: 4,
+    stars: 5,
   },
   {
     name: "Soham B.",
@@ -44,7 +44,7 @@ const successStories = [
     story:
       "Sanya ran India’s first all-women collegiate hackathon, raising funds solely via FuelFundr. The badges and Leaderboard got alumni excited to give!",
     imgSrc: "https://randomuser.me/api/portraits/women/82.jpg",
-    stars: 4,
+    stars: 5,
   },
   {
     name: "Shubham G.",
@@ -58,51 +58,58 @@ const successStories = [
 ];
 
 const UserSuccessStoriesSection = () => (
-  <section
-    id="success-stories"
-    className="py-16 bg-gradient-to-b from-slate-900/90 to-blue-900/90 via-slate-950 relative"
-  >
-    <div className="max-w-5xl mx-auto px-2 sm:px-4 md:px-8">
-      <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-10 bg-gradient-to-r from-blue-600 to-green-400 bg-clip-text text-transparent flex items-center justify-center gap-3 text-center">
-        <Sparkles className="w-9 h-9 text-yellow-300 -mt-2" /> User Success
-        Stories
-      </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-7 md:gap-9">
+  <section id="success-stories" className="py-16 bg-slate-50 dark:bg-slate-950/20 select-none">
+    <div className="max-w-4xl mx-auto px-6">
+      <div className="flex items-center justify-center gap-2 mb-10">
+        <Sparkles className="w-5 h-5 text-indigo-500" />
+        <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+          User Success Stories
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {successStories.map((u, i) => (
           <div
             key={i}
-            className="bg-white/95 dark:bg-slate-900/85 border border-blue-100 dark:border-slate-800 rounded-2xl shadow-xl p-5 sm:p-7 flex flex-col gap-3 md:flex-row items-center sm:items-start"
+            className="yc-card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 flex flex-col justify-between shadow-sm"
           >
-            <img
-              src={u.imgSrc}
-              alt={u.name}
-              className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-blue-300 shadow-md mb-2 md:mb-0"
-              loading="lazy"
-            />
-            <div className="flex-1 md:ml-5 flex flex-col gap-2">
-              <div className="flex flex-wrap items-center gap-2 mb-0.5">
-                <span className="font-bold text-blue-800 dark:text-green-200 text-base sm:text-lg">
-                  {u.name}
-                </span>
-                <School className="w-4 h-4 text-green-400" />
-                <span className="text-sm text-blue-600 dark:text-blue-300 font-semibold">
-                  {u.university}
-                </span>
-                <span className="flex ml-2">
+            <div>
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={u.imgSrc}
+                    alt={u.name}
+                    className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-white/10 shadow-sm"
+                    loading="lazy"
+                  />
+                  <div>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-sm">
+                      {u.name}
+                    </h4>
+                    <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-1 mt-0.5">
+                      <School className="w-3 h-3 text-indigo-500" />
+                      <span>{u.university}</span>
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex">
                   {[...Array(u.stars)].map((_, j) => (
                     <Star
                       key={j}
-                      className="w-4 h-4 text-yellow-400 fill-yellow-300"
+                      className="w-3.5 h-3.5 text-amber-500 fill-amber-500"
                     />
                   ))}
-                </span>
+                </div>
               </div>
-              <div className="text-[1.06rem] font-semibold text-blue-900 dark:text-green-200 mb-0.5 leading-tight">
+
+              <h5 className="text-sm font-bold text-indigo-500 mb-1">
                 {u.title}
-              </div>
-              <div className="text-gray-700 dark:text-gray-300 text-base leading-snug">
+              </h5>
+              
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                 {u.story}
-              </div>
+              </p>
             </div>
           </div>
         ))}

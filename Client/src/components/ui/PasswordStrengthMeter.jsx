@@ -10,15 +10,15 @@ const PasswordCriteria = ({ password }) => {
   ];
 
   return (
-    <div className="mt-2 space-y-1">
+    <div className="mt-2 space-y-1 select-none">
       {criteria.map((item) => (
-        <div key={item.label} className="flex items-center text-xs">
+        <div key={item.label} className="flex items-center text-[10px] font-mono">
           {item.met ? (
-            <Check className="size-4 text-green-500 mr-2" />
+            <Check className="w-3 h-3 text-emerald-500 mr-1.5" />
           ) : (
-            <X className="size-4 text-gray-500 mr-2" />
+            <X className="w-3 h-3 text-slate-400 mr-1.5" />
           )}
-          <span className={item.met ? "text-green-500" : "text-gray-400"}>
+          <span className={item.met ? "text-emerald-500 font-bold" : "text-slate-400"}>
             {item.label}
           </span>
         </div>
@@ -39,11 +39,11 @@ const PasswordStrengthMeter = ({ password }) => {
   const strength = getStrength(password);
 
   const getColor = (strength) => {
-    if (strength === 0) return "bg-red-500";
-    if (strength === 1) return "bg-red-400";
-    if (strength === 2) return "bg-yellow-500";
-    if (strength === 3) return "bg-yellow-400";
-    return "bg-green-500";
+    if (strength === 0) return "bg-rose-500";
+    if (strength === 1) return "bg-rose-450";
+    if (strength === 2) return "bg-amber-500";
+    if (strength === 3) return "bg-amber-400";
+    return "bg-emerald-500";
   };
 
   const getStrengthText = (strength) => {
@@ -55,20 +55,18 @@ const PasswordStrengthMeter = ({ password }) => {
   };
 
   return (
-    <div className="mt-2">
-      <div className="flex justify-between items-center mb-1">
-        <span className="text-xs text-gray-400">Password strength</span>
-        <span className="text-xs text-gray-400">
-          {getStrengthText(strength)}
-        </span>
+    <div className="mt-3 select-none">
+      <div className="flex justify-between items-center mb-1.5 text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500">
+        <span>Password strength</span>
+        <span>{getStrengthText(strength)}</span>
       </div>
 
-      <div className="flex space-x-1">
+      <div className="flex space-x-1 mb-3">
         {[...Array(4)].map((_, index) => (
           <div
             key={index}
             className={`h-1 w-1/4 rounded-full transition-colors duration-300 
-                ${index < strength ? getColor(strength) : "bg-gray-600"}
+                ${index < strength ? getColor(strength) : "bg-slate-200 dark:bg-slate-800"}
               `}
           />
         ))}
@@ -77,4 +75,5 @@ const PasswordStrengthMeter = ({ password }) => {
     </div>
   );
 };
+
 export default PasswordStrengthMeter;

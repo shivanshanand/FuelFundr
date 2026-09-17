@@ -7,47 +7,45 @@ const CallToActionSection = () => {
   const [showComingSoon, setShowComingSoon] = useState(false);
 
   return (
-    <section className="w-full py-16 px-4 flex flex-col items-center bg-gradient-to-r from-green-100 to-blue-100 dark:from-green-900/50 dark:to-blue-900/30">
-      <div className="max-w-4xl w-full mx-auto rounded-2xl glassy-card shadow-xl border border-green-100 dark:border-blue-900 bg-white/80 dark:bg-slate-900/70 flex flex-col items-center py-12 px-6 text-center">
-        <h2 className="text-2xl md:text-3xl font-extrabold mb-5 bg-gradient-to-r from-blue-700 to-green-400 bg-clip-text text-transparent tracking-tight drop-shadow">
+    <section className="w-full py-16 px-6 bg-slate-50 dark:bg-slate-950/20 flex flex-col items-center select-none">
+      <div className="max-w-3xl w-full yc-card p-10 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 flex flex-col items-center text-center shadow-sm">
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-2">
           Ready to Start Your Journey?
         </h2>
-        <p className="text-lg text-gray-700 dark:text-green-100 mb-8">
-          Launch a campaign, support a peer, or join our student community.
-          <br className="hidden md:inline" />
-          FuelFundr is where change begins—with you!
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-8 leading-relaxed max-w-md">
+          Launch a campaign, support a peer, or join our student network. FuelFundr is where campus change begins.
         </p>
-        <div className="flex flex-col sm:flex-row gap-5 w-full max-w-xl justify-center mt-4">
+        
+        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm justify-center">
           <Link
             to="/campaigns/create"
-            className="flex-1 flex justify-center items-center gap-2 bg-gradient-to-r from-green-400 to-blue-600 hover:from-green-500 hover:to-blue-700 text-white font-bold px-7 py-4 rounded-xl text-lg shadow transition"
+            className="flex-1 px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-1.5 cursor-pointer"
           >
-            <Rocket className="w-6 h-6" />
-            Start a Campaign
+            <Rocket className="w-4 h-4" />
+            <span>Launch Campaign</span>
           </Link>
-          {/* Use button, not Link, so it never tries to route */}
+          
           <button
             type="button"
-            className="flex-1 flex justify-center items-center gap-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-700 hover:to-green-500 text-white font-bold px-7 py-4 rounded-xl text-lg shadow transition focus:outline-none"
+            className="flex-1 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 hover:border-slate-350 transition text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
             onClick={() => setShowComingSoon(true)}
           >
-            <Users className="w-6 h-6" />
-            Join Community
+            <Users className="w-4 h-4 text-slate-400" />
+            <span>Join Network</span>
           </button>
         </div>
-        <div className="mt-7 text-sm text-white font-semibold opacity-70">
-          Got questions?{" "}
+        
+        <div className="mt-8 text-[11px] font-mono text-slate-400 dark:text-slate-500">
+          Have questions?{" "}
           <a
             href="mailto:support@fuelfundr.com"
-            className="underline underline-offset-2 hover:text-green-600"
+            className="underline underline-offset-2 hover:text-indigo-500 transition-colors"
           >
             Contact us
           </a>
         </div>
       </div>
-      <style>{`
-        .glassy-card { backdrop-filter: blur(7px);}
-      `}</style>
+
       <ComingSoonModal
         show={showComingSoon}
         onClose={() => setShowComingSoon(false)}

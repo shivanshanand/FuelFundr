@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Star, Quote } from "lucide-react";
+import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import { getInitials } from "../../utils/initials";
+import { motion, AnimatePresence } from "framer-motion";
 
 const reviews = [
   {
@@ -45,54 +46,6 @@ const reviews = [
     text: "I donated to 3 projects in one evening! Love the student focus and leaderboard badge concept.",
     stars: 5,
   },
-  {
-    name: "Manan S.",
-    university: "IIT Delhi",
-    text: "Smoothest payout and campaign setup out there, but wish there were more campaign templates by default.",
-    stars: 4,
-  },
-  {
-    name: "Saloni B.",
-    university: "Anna University",
-    text: "Backer rewards are fun! The mobile view could be even better though.",
-    stars: 4,
-  },
-  {
-    name: "Harsh G.",
-    university: "Amity University",
-    text: "Crowdfunded my app project easily. Platform’s quick support really helped, but campaign editing can be improved.",
-    stars: 4,
-  },
-  {
-    name: "Ankita N.",
-    university: "SRM University",
-    text: "Great way for NGOs to reach college students. Would appreciate more visibility tools for creators.",
-    stars: 3,
-  },
-  {
-    name: "Rohan T.",
-    university: "IISc Bangalore",
-    text: "FuelFundr is where my robotics idea met supporters. Transparent progress bar is super motivating.",
-    stars: 5,
-  },
-  {
-    name: "Tanya D.",
-    university: "Christ University",
-    text: "Like how easy it is to track backing history. Wish campaign sorting had more options.",
-    stars: 4,
-  },
-  {
-    name: "Vipul S.",
-    university: "Jadavpur University",
-    text: "Setup and donation flows are simple. Would prefer faster campaign approval sometimes.",
-    stars: 3,
-  },
-  {
-    name: "Siddharth V.",
-    university: "IIT Kanpur",
-    text: "Peer-to-peer donations on FuelFundr feel really safe and empowering for students. Highly recommend.",
-    stars: 5,
-  },
 ];
 
 function useVisibleCount() {
@@ -113,118 +66,117 @@ function useVisibleCount() {
 const ReviewsSection = () => {
   const visible = useVisibleCount();
   const [idx, setIdx] = useState(0);
+  const [direction, setDirection] = useState(0); // -1 for left, 1 for right
 
   function handleNext() {
+    setDirection(1);
     setIdx((i) => (i + 1) % reviews.length);
   }
+  
   function handlePrev() {
+    setDirection(-1);
     setIdx((i) => (i - 1 + reviews.length) % reviews.length);
   }
 
-  // Calculate which reviews to display
   let shown = [];
-  if (reviews.length <= visible) {
-    shown = reviews;
-  } else {
-    for (let i = 0; i < visible; ++i) {
-      shown.push(reviews[(idx + i) % reviews.length]);
-    }
+  for (let i = 0; i < visible; ++i) {
+    shown.push(reviews[(idx + i) % reviews.length]);
   }
   const isMobile = visible === 1;
 
   return (
-    <section className="w-full bg-gradient-to-r from-green-100 to-blue-100 dark:from-green-950 dark:to-blue-950 py-16 px-2 sm:px-3 flex flex-col items-center">
-      <h2 className="text-2xl md:text-3xl font-extrabold text-center mb-12 bg-gradient-to-r from-blue-600 to-green-300 bg-clip-text text-transparent">
+    <section className="w-full bg-slate-50/50 dark:bg-slate-950/20 border-y border-slate-200/50 dark:border-white/5 py-20 px-6 flex flex-col items-center select-none">
+      <motion.h2
+        initial={{ opacity: 0, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.5 }}
+        className="text-3xl md:text-4xl font-black text-center text-slate-900 dark:text-white mb-16 tracking-tighter"
+      >
         What Our Users Say
-      </h2>
-      <div className="flex items-center gap-2 sm:gap-6 max-w-5xl mx-auto w-full">
-        {/* Prev arrow (always visible, disabled for one review) */}
+      </motion.h2>
+
+      <div className="flex items-center gap-4 max-w-5xl mx-auto w-full relative">
+        {/* Prev Button */}
         <button
           type="button"
           onClick={handlePrev}
           aria-label="Previous reviews"
-          className="text-blue-500 hover:bg-blue-200/60 dark:hover:bg-slate-900/60 transition-all rounded-full p-2 disabled:opacity-40 disabled:pointer-events-none"
-          disabled={reviews.length === 1}
+          className="p-2 border border-slate-200 dark:border-white/10 rounded-full hover:border-indigo-500 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-indigo-500 shadow-sm transition cursor-pointer shrink-0 z-10"
         >
-          <svg width="22" height="22" viewBox="0 0 20 20">
-            <path
-              d="M13 15l-5-5 5-5"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-            />
-          </svg>
+          <ChevronLeft className="w-5 h-5" />
         </button>
-        {/* Review Cards */}
-        <div
-          className={`grid ${
-            isMobile
-              ? "grid-cols-1 gap-6"
-              : visible === 2
-              ? "grid-cols-2 gap-8"
-              : "grid-cols-3 gap-6"
-          } w-full`}
-        >
-          {shown.map((review, i) => (
-            <div
-              key={review.name + review.text.slice(0, 10) + i}
-              className="relative glassy-card shadow-xl border border-blue-50 dark:border-slate-800 rounded-2xl p-7 pb-6 flex flex-col items-center bg-white/80 dark:bg-slate-900/80"
+
+        {/* Cards Row */}
+        <div className="flex-grow w-full overflow-hidden">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={idx + "-" + visible}
+              initial={{ opacity: 0, x: direction * 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -direction * 40 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className={`grid ${
+                isMobile
+                  ? "grid-cols-1 gap-6"
+                  : visible === 2
+                  ? "grid-cols-2 gap-6"
+                  : "grid-cols-3 gap-6"
+              } w-full`}
             >
-              <div className="absolute top-3 left-3 opacity-30 text-green-400 dark:text-green-800">
-                <Quote className="w-8 h-8" />
-              </div>
-              <div className="flex items-center mb-2 gap-3">
-                <span className="rounded-full bg-gradient-to-br from-green-200 to-blue-200 dark:from-green-700 dark:to-blue-900 flex items-center justify-center w-10 h-10 md:w-12 md:h-12 shadow border-2 border-blue-200 dark:border-green-700">
-                  <span className="font-bold text-blue-900 dark:text-green-200 text-lg md:text-xl select-none">
-                    {getInitials(review.name)}
-                  </span>
-                </span>
-                <div>
-                  <div className="font-bold text-blue-800 dark:text-green-300">
-                    {review.name}
+              {shown.map((review, i) => (
+                <div
+                  key={review.name + "-" + i}
+                  className="yc-card p-8 flex flex-col justify-between min-h-[220px] relative overflow-hidden"
+                >
+                  <div className="absolute top-4 right-4 opacity-15 text-indigo-500">
+                    <Quote className="w-8 h-8 rotate-180" />
                   </div>
-                  <div className="text-sm text-gray-500 dark:text-green-100">
-                    {review.university}
+
+                  <p className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed mb-6 italic z-10">
+                    "{review.text}"
+                  </p>
+
+                  <div className="flex items-center justify-between mt-auto">
+                    <div className="flex items-center gap-3">
+                      <span className="w-9 h-9 rounded-full bg-indigo-500/5 border border-indigo-500/10 flex items-center justify-center font-bold text-indigo-600 text-xs">
+                        {getInitials(review.name)}
+                      </span>
+                      <div>
+                        <div className="font-bold text-slate-800 dark:text-slate-200 text-xs leading-tight">
+                          {review.name}
+                        </div>
+                        <div className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
+                          {review.university}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-0.5">
+                      {Array.from({ length: review.stars }).map((_, idx) => (
+                        <Star
+                          key={idx}
+                          className="w-3.5 h-3.5 text-amber-500 fill-amber-400"
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="text-[1.06rem] text-gray-700 dark:text-gray-100 mb-2 text-center">
-                {review.text}
-              </div>
-              <div className="flex gap-1 justify-center mb-1">
-                {Array.from({ length: review.stars }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-5 h-5 text-yellow-400 fill-yellow-300"
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
+              ))}
+            </motion.div>
+          </AnimatePresence>
         </div>
-        {/* Next arrow (always visible, disabled for one review) */}
+
+        {/* Next Button */}
         <button
           type="button"
           onClick={handleNext}
           aria-label="Next reviews"
-          className="text-blue-500 hover:bg-blue-200/60 dark:hover:bg-slate-900/60 transition-all rounded-full p-2 disabled:opacity-40 disabled:pointer-events-none"
-          disabled={reviews.length === 1}
+          className="p-2 border border-slate-200 dark:border-white/10 rounded-full hover:border-indigo-500 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-indigo-500 shadow-sm transition cursor-pointer shrink-0 z-10"
         >
-          <svg width="22" height="22" viewBox="0 0 20 20">
-            <path
-              d="M7 5l5 5-5 5"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-            />
-          </svg>
+          <ChevronRight className="w-5 h-5" />
         </button>
       </div>
-      <style>{`
-        .glassy-card { backdrop-filter: blur(3px);}
-      `}</style>
     </section>
   );
 };

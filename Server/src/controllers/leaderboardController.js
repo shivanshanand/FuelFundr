@@ -7,9 +7,9 @@ export const getLeaderboard = async (req, res) => {
 
   try {
     if (type === "donation") {
-      // 1. Aggregate all DONATION transactions, sum by userId, sorted descending
+      // 1. Aggregate all DONATION transactions (excluding guests), sum by userId, sorted descending
       const allAgg = await WalletTransaction.aggregate([
-        { $match: { type: "DONATION" } },
+        { $match: { type: "DONATION", userId: { $ne: null } } },
         { $group: { _id: "$userId", totalDonated: { $sum: "$amount" } } },
         { $sort: { totalDonated: -1 } },
       ]);
@@ -22,7 +22,7 @@ export const getLeaderboard = async (req, res) => {
 
       if (currentUserId) {
         const index = allAgg.findIndex(
-          (row) => row._id.toString() === currentUserId.toString()
+          (row) => row._id && row._id.toString() === currentUserId.toString()
         );
         if (index >= 0 && index >= 10) {
           // Current user not in top 10, include their row
@@ -40,7 +40,7 @@ export const getLeaderboard = async (req, res) => {
 
       // Build main leaderboard
       let leaderboard = leaderboardAgg.map((row, ix) => {
-        const u = users.find((u) => u._id.toString() === row._id.toString());
+        const u = users.find((u) => u._id && row._id && u._id.toString() === row._id.toString());
         return {
           userId: row._id,
           name: u?.name || "Anonymous",

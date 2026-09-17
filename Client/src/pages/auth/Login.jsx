@@ -39,16 +39,16 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-white to-blue-50 dark:from-slate-900 dark:via-slate-950 dark:to-blue-900 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors duration-200 px-6 select-none">
       <motion.div
-        initial={{ opacity: 0, y: 32 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-md w-full bg-white dark:bg-slate-900/80 bg-opacity-95 backdrop-blur-xl rounded-2xl shadow-2xl border border-blue-200 dark:border-slate-800 overflow-hidden transition-colors duration-300"
+        transition={{ duration: 0.4 }}
+        className="max-w-sm w-full yc-card overflow-hidden shadow-xl"
       >
         <div className="p-8">
-          <h2 className="text-3xl font-extrabold mb-8 text-center bg-gradient-to-r from-blue-700 to-green-400 bg-clip-text text-transparent">
-            Welcome Back
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter mb-6 text-center">
+            Sign In
           </h2>
           <form onSubmit={handleLogin} autoComplete="off">
             <Input
@@ -66,68 +66,57 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            <div className="flex justify-end mb-6">
+            <div className="flex justify-end mb-5">
               <Link
                 to="/forgot-password"
-                className="text-sm text-green-500 dark:text-green-400 hover:underline"
+                className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
               >
                 Forgot password?
               </Link>
             </div>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              className="w-full py-3 px-4 bg-gradient-to-r from-blue-700 to-green-400 text-white font-bold rounded-xl shadow-lg hover:from-blue-800 hover:to-green-500 focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 transition-all duration-200"
+            <button
+              className="w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm hover:shadow-indigo-600/10 transition cursor-pointer flex items-center justify-center"
               type="submit"
               disabled={isLoading}
             >
               {isLoading ? (
-                <Loader className="animate-spin mx-auto" size={22} />
+                <Loader className="animate-spin w-4 h-4" />
               ) : (
-                "Login"
+                "Sign In"
               )}
-            </motion.button>
+            </button>
 
-            <div className="relative my-6">
-  <div className="absolute inset-0 flex items-center">
-    <div className="w-full border-t border-gray-300 dark:border-gray-700" />
-  </div>
-  <div className="relative flex justify-center text-sm">
-    <span className="px-3 bg-white dark:bg-slate-900 text-gray-500">
-      or continue with
-    </span>
-  </div>
-</div>
+            <div className="relative my-5">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200 dark:border-white/5" />
+              </div>
+              <div className="relative flex justify-center text-[10px] font-mono uppercase tracking-wider">
+                <span className="px-3.5 bg-white dark:bg-slate-900 text-slate-400">
+                  or
+                </span>
+              </div>
+            </div>
 
-<motion.button
-  type="button" 
-  whileHover={{ scale: 1.02 }}
-  whileTap={{ scale: 0.97 }}
-  onClick={handleGoogleLogin}
-  className="w-full flex items-center justify-center gap-3 py-3 px-4 
-             rounded-xl font-semibold shadow-md border 
-             border-gray-300 dark:border-slate-700
-             bg-white dark:bg-slate-800 
-             hover:bg-gray-50 dark:hover:bg-slate-700
-             transition-all duration-200"
->
-  <Chrome className="w-5 h-5 text-red-500" />
-  <span className="text-gray-700 dark:text-gray-200">
-    Continue with Google
-  </span>
-</motion.button>
-
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-250 hover:border-indigo-500 bg-white dark:bg-slate-900 transition text-xs font-bold cursor-pointer"
+            >
+              <Chrome className="w-4 h-4 text-rose-500" />
+              <span>Continue with Google</span>
+            </button>
           </form>
         </div>
-        <div className="px-8 py-4 bg-blue-50 dark:bg-slate-800 flex justify-center border-t border-blue-200 dark:border-slate-700">
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            Don&apos;t have an account?{" "}
+        
+        <div className="px-8 py-4 bg-slate-50 dark:bg-slate-950/40 flex justify-center border-t border-slate-200/50 dark:border-white/5">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Don't have an account?{" "}
             <Link
               to="/register"
-              className="text-green-500 dark:text-green-400 hover:underline font-semibold"
+              className="text-indigo-600 dark:text-indigo-400 hover:underline font-bold"
             >
-              Sign up
+              Sign Up
             </Link>
           </p>
         </div>

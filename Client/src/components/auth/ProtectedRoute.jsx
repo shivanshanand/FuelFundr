@@ -1,5 +1,5 @@
 import { useAuthStore } from "../../store/authStore";
-import { LoaderCircleIcon, Lock } from "lucide-react";
+import { LoaderCircleIcon, Lock, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -19,8 +19,8 @@ const ProtectedRoute = ({ children }) => {
 
   if (isCheckingAuth)
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <LoaderCircleIcon className="animate-spin w-14 h-14 text-blue-700 dark:text-green-300" />
+      <div className="flex justify-center items-center min-h-screen bg-slate-50 dark:bg-slate-950">
+        <div className="w-8 h-8 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
       </div>
     );
 
@@ -30,34 +30,40 @@ const ProtectedRoute = ({ children }) => {
     return children;
   }
 
-  // Unauthed: full modal lock
+  // Unauthed: full modal lock overlay
   return (
-    <div className="fixed inset-0 z-[9999] min-h-screen w-full flex items-center justify-center bg-black/20 backdrop-blur-[2px]">
-      {/* Blurred content behind (visual only, not focusable) */}
-      <div className="fixed inset-0 pointer-events-none select-none filter blur-[5px] opacity-70">
+    <div className="fixed inset-0 z-[9999] min-h-screen w-full flex items-center justify-center bg-slate-950/60 backdrop-blur-xs px-6 select-none">
+      {/* Blurred background view */}
+      <div className="fixed inset-0 pointer-events-none select-none filter blur-[4px] opacity-60">
         {children}
       </div>
-      {/* Modal */}
-      <div className="relative z-10 flex flex-col items-center justify-center">
-        <div className="bg-white/95 dark:bg-slate-900/95 border-2 border-blue-400 dark:border-green-400 p-8 max-w-xs w-[94vw] mx-auto rounded-2xl shadow-2xl flex flex-col items-center text-center">
-          <Lock className="w-10 h-10 text-blue-500 dark:text-green-300 mb-3" />
-          <h2 className="text-lg font-extrabold text-blue-700 dark:text-green-200 mb-3">
-            Login Required
-          </h2>
-          <p className="text-gray-700 dark:text-gray-200 mb-5 font-medium">
-            You must log in to access this section.
-          </p>
+      
+      {/* Modal Card */}
+      <div className="relative z-10 w-full max-w-sm yc-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 p-8 text-center flex flex-col items-center shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+        <div className="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4 border border-indigo-500/20">
+          <Lock className="w-5 h-5 text-indigo-500" />
+        </div>
+        
+        <h2 className="text-lg font-black text-slate-900 dark:text-white tracking-tight mb-2">
+          Authentication Required
+        </h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-6 max-w-xs leading-relaxed">
+          You must log in to view or manage this campaign section.
+        </p>
+        
+        <div className="flex flex-col gap-2.5 w-full">
           <button
             onClick={() => navigate("/login")}
-            className="w-full px-6 py-2 mb-3 rounded-lg bg-gradient-to-r from-blue-700 to-green-400 text-white font-bold shadow hover:from-blue-800 hover:to-green-500 transition"
+            className="w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition cursor-pointer uppercase tracking-widest"
           >
-            Login / Sign Up
+            Log In / Sign Up
           </button>
+          
           <button
             onClick={() => navigate(-1)}
-            className="w-full px-6 py-2 rounded-lg border-2 border-blue-400 dark:border-green-400 bg-white/90 dark:bg-slate-900/80 text-blue-700 dark:text-green-300 font-semibold mt-1 hover:bg-blue-50 dark:hover:bg-green-900 transition"
+            className="w-full py-2.5 rounded-lg border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 hover:border-slate-350 transition cursor-pointer text-xs font-bold uppercase tracking-widest"
           >
-            ← Go Back
+            Go Back
           </button>
         </div>
       </div>

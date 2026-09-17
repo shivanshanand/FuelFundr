@@ -44,17 +44,18 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-white to-blue-50 dark:from-slate-900 dark:via-slate-950 dark:to-blue-900 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors duration-200 px-6 select-none">
       <motion.div
-        initial={{ opacity: 0, y: 32 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-md w-full bg-white dark:bg-slate-900/80 bg-opacity-95 backdrop-blur-xl rounded-2xl shadow-2xl border border-blue-200 dark:border-slate-800 overflow-hidden transition-colors duration-300"
+        transition={{ duration: 0.4 }}
+        className="max-w-sm w-full yc-card overflow-hidden shadow-xl"
       >
         <div className="p-8">
-          <h2 className="text-3xl font-extrabold mb-8 text-center bg-gradient-to-r from-blue-700 to-green-400 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter mb-6 text-center">
             Reset Password
           </h2>
+          
           <form onSubmit={handleSubmit} autoComplete="off">
             <Input
               icon={Lock}
@@ -70,25 +71,22 @@ const ResetPassword = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              className="w-full py-3 px-4 bg-gradient-to-r from-blue-700 to-green-400 text-white font-bold rounded-xl shadow-lg hover:from-blue-800 hover:to-green-500 focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 transition-all duration-200"
+            <button
+              className="w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition cursor-pointer flex items-center justify-center mt-4"
               type="submit"
               disabled={isLoading}
             >
               {isLoading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <Loader className="w-5 h-5 animate-spin" /> Resetting...
-                </span>
+                <Loader className="animate-spin w-4 h-4" />
               ) : (
                 "Set New Password"
               )}
-            </motion.button>
+            </button>
           </form>
         </div>
       </motion.div>
     </div>
   );
 };
+
 export default ResetPassword;

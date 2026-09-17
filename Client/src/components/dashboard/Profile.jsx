@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Calendar,
   User,
@@ -16,30 +16,29 @@ import { getInitials } from "../../utils/initials";
 
 const defaultSocials = { linkedin: "", twitter: "", instagram: "" };
 
-// Badge config map for icon, description, etc.
 const BADGE_DETAILS = {
   "First Donation": {
-    icon: <Gift className="w-8 h-8 text-yellow-400 animate-wiggle-slow" />,
+    icon: <Gift className="w-5 h-5 text-indigo-500" />,
     label: "First Donation",
     desc: "Made your very first donation. Welcome to the community!",
   },
   Contributor: {
-    icon: <Users className="w-8 h-8 text-blue-400 animate-bounce" />,
+    icon: <Users className="w-5 h-5 text-indigo-500" />,
     label: "Contributor",
     desc: "Made 3+ donations to support campaigns.",
   },
   Supporter: {
-    icon: <Award className="w-8 h-8 text-green-400 animate-tada" />,
+    icon: <Award className="w-5 h-5 text-indigo-500" />,
     label: "Supporter",
     desc: "Donated a total of ₹1,000 or more.",
   },
   Campaigner: {
-    icon: <Rocket className="w-8 h-8 text-pink-400 animate-spin-slow" />,
+    icon: <Rocket className="w-5 h-5 text-indigo-500" />,
     label: "Campaigner",
     desc: "Started your first campaign.",
   },
   Fundraiser: {
-    icon: <Trophy className="w-8 h-8 text-orange-400 animate-bounce-slow" />,
+    icon: <Trophy className="w-5 h-5 text-indigo-500" />,
     label: "Fundraiser",
     desc: "Started 3+ campaigns.",
   },
@@ -71,74 +70,75 @@ const Profile = ({ user }) => {
       await updateProfile({ socials });
       setEditingSocials(false);
     } catch {
-      setSocialError("Failed to update socials. Please check links!");
+      setSocialError("Failed to update socials.");
     }
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:items-start gap-10 w-full max-w-4xl min-h-[22rem] mx-auto glassy bg-white/90 dark:bg-slate-900/90 rounded-2xl shadow-2xl p-8 md:p-12 border border-blue-200 dark:border-slate-800 relative">
-      {/* Left: Avatar, name, email, bio, socials */}
-      <div className="md:w-[270px] w-full flex flex-col items-center md:items-start gap-7">
-        <div className="h-28 w-28 md:h-32 md:w-32 flex items-center justify-center rounded-full border-4 border-blue-300 dark:border-green-200 shadow-xl bg-gradient-to-br from-blue-200 to-green-200 dark:from-green-900 dark:to-blue-900 select-none">
+    <div className="flex flex-col md:flex-row md:items-start gap-10 w-full max-w-4xl mx-auto yc-card p-8 md:p-10 select-none">
+      {/* Left Column */}
+      <div className="md:w-[260px] w-full flex flex-col items-center md:items-start gap-6 border-b md:border-b-0 md:border-r border-slate-200/50 dark:border-white/5 pb-8 md:pb-0 md:pr-10 shrink-0">
+        <div className="h-24 w-24 flex items-center justify-center rounded-full border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-900 select-none">
           {initials ? (
-            <span className="text-4xl md:text-5xl font-extrabold text-blue-700 dark:text-green-200">
+            <span className="text-3xl font-black text-slate-800 dark:text-white">
               {initials}
             </span>
           ) : (
-            <UserCircle2 className="h-20 w-20 md:h-24 md:w-24 text-blue-700 dark:text-green-200" />
+            <UserCircle2 className="h-16 w-16 text-slate-400" />
           )}
         </div>
 
         <div className="w-full flex flex-col items-center md:items-start text-center md:text-left">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-700 to-green-400 bg-clip-text text-transparent mb-1">
-            {user?.name || "Anonymous"}
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight mb-1 truncate max-w-full">
+            {user?.name || "Anonymous User"}
           </h2>
-          <div className="text-blue-700 dark:text-green-300 font-semibold break-all text-base">
+          <div className="text-xs font-mono text-slate-400 dark:text-slate-500 break-all">
             {user?.email}
           </div>
         </div>
+
         {/* Bio Section */}
         <div className="w-full">
-          <div className="flex items-center justify-between gap-2 mb-1">
-            <span className="text-[1.04rem] font-semibold text-blue-700 dark:text-green-300">
-              Bio
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+              Bio Description
             </span>
             {!editingBio && (
               <button
-                className="p-1 text-blue-700 dark:text-green-300 rounded hover:bg-blue-100 dark:hover:bg-green-900 transition"
+                className="p-1 text-slate-450 hover:text-indigo-500 dark:text-slate-500 dark:hover:text-indigo-400 transition cursor-pointer"
                 onClick={() => setEditingBio(true)}
                 title="Edit bio"
               >
-                <Edit2 className="w-4 h-4" />
+                <Edit2 className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
           {!editingBio ? (
-            <div className="text-[.97rem] text-gray-600 dark:text-gray-300 bg-gradient-to-r from-blue-50 to-green-50 dark:from-slate-800/50 dark:to-green-900/30 rounded-xl px-3 py-2 shadow-inner min-h-[48px]">
+            <div className="text-sm text-slate-600 dark:text-slate-350 bg-slate-50 dark:bg-slate-950/20 border border-slate-200/50 dark:border-white/5 rounded-xl px-4 py-3 min-h-[48px]">
               {user?.bio?.trim() ? (
                 user.bio
               ) : (
-                <span className="italic text-gray-400">
-                  No bio added. Click edit to add something!
+                <span className="italic text-slate-400 dark:text-slate-500 text-xs">
+                  No bio details added. Click edit to add.
                 </span>
               )}
             </div>
           ) : (
-            <div className="flex flex-col gap-2 mt-1">
+            <div className="flex flex-col gap-2">
               <textarea
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 disabled={isLoading}
-                className="border border-blue-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg p-2 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 text-xs rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white outline-none focus:border-indigo-500 resize-none"
                 rows={3}
                 maxLength={200}
-                placeholder="Add a short description about you..."
+                placeholder="Write a brief profile description..."
               />
               <div className="flex gap-2">
                 <button
                   onClick={handleBioSave}
                   disabled={isLoading}
-                  className="px-4 py-1.5 rounded-lg bg-gradient-to-r from-green-400 to-blue-600 text-white font-bold shadow disabled:opacity-80"
+                  className="px-3 py-1.5 text-[10px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm cursor-pointer"
                 >
                   Save
                 </button>
@@ -148,30 +148,31 @@ const Profile = ({ user }) => {
                     setBio(user.bio || "");
                   }}
                   disabled={isLoading}
-                  className="px-3 py-1.5 rounded-lg border border-blue-300 dark:border-slate-700 text-blue-700 dark:text-green-200 bg-white dark:bg-slate-900"
+                  className="px-3 py-1.5 text-[10px] font-bold border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 rounded-lg cursor-pointer"
                 >
                   Cancel
                 </button>
               </div>
               {error && (
-                <div className="text-red-600 text-xs ml-1">{error}</div>
+                <div className="text-rose-500 text-[10px] font-semibold">{error}</div>
               )}
             </div>
           )}
         </div>
+
         {/* Socials Section */}
         <div className="w-full">
-          <div className="flex items-center justify-between gap-2 mb-1">
-            <span className="text-[1.04rem] font-semibold text-blue-700 dark:text-green-300">
-              Socials
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+              Social Links
             </span>
             {!editingSocials && (
               <button
-                className="p-1 text-blue-700 dark:text-green-300 rounded hover:bg-blue-100 dark:hover:bg-green-900 transition"
+                className="p-1 text-slate-450 hover:text-indigo-500 dark:text-slate-500 dark:hover:text-indigo-400 transition cursor-pointer"
                 onClick={() => setEditingSocials(true)}
                 title="Edit socials"
               >
-                <Edit2 className="w-4 h-4" />
+                <Edit2 className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
@@ -182,10 +183,10 @@ const Profile = ({ user }) => {
                   href={user.socials.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-blue-600 text-blue-800 dark:text-green-200"
+                  className="text-slate-550 dark:text-slate-400 hover:text-indigo-550 dark:hover:text-indigo-400 transition"
                   title="LinkedIn"
                 >
-                  <FaLinkedin className="w-6 h-6" />
+                  <FaLinkedin className="w-5 h-5" />
                 </a>
               )}
               {user?.socials?.twitter && (
@@ -193,10 +194,10 @@ const Profile = ({ user }) => {
                   href={user.socials.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-blue-400 text-blue-800 dark:text-green-200"
+                  className="text-slate-550 dark:text-slate-400 hover:text-indigo-450 dark:hover:text-indigo-400 transition"
                   title="Twitter"
                 >
-                  <FaTwitter className="w-6 h-6" />
+                  <FaTwitter className="w-5 h-5" />
                 </a>
               )}
               {user?.socials?.instagram && (
@@ -204,17 +205,17 @@ const Profile = ({ user }) => {
                   href={user.socials.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-pink-500 text-blue-800 dark:text-green-200"
+                  className="text-slate-550 dark:text-slate-400 hover:text-rose-550 dark:hover:text-rose-450 transition"
                   title="Instagram"
                 >
-                  <FaInstagram className="w-6 h-6" />
+                  <FaInstagram className="w-5 h-5" />
                 </a>
               )}
               {!user?.socials ||
               (!user.socials.linkedin &&
                 !user.socials.twitter &&
                 !user.socials.instagram) ? (
-                <span className="italic text-gray-400 text-sm">
+                <span className="italic text-slate-400 dark:text-slate-500 text-xs">
                   No socials connected.
                 </span>
               ) : null}
@@ -223,9 +224,9 @@ const Profile = ({ user }) => {
             <div className="flex flex-col gap-2 mt-1">
               <input
                 type="text"
-                className="border border-blue-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded p-2 text-gray-900 dark:text-white"
-                placeholder="LinkedIn URL"
-                value={socials.linkedin}
+                className="w-full px-3 py-1.5 text-xs rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white outline-none focus:border-indigo-500"
+                placeholder="LinkedIn Profile URL"
+                value={socials.linkedin || ""}
                 onChange={(e) =>
                   setSocials((s) => ({ ...s, linkedin: e.target.value }))
                 }
@@ -233,9 +234,9 @@ const Profile = ({ user }) => {
               />
               <input
                 type="text"
-                className="border border-blue-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded p-2 text-gray-900 dark:text-white"
-                placeholder="Twitter URL"
-                value={socials.twitter}
+                className="w-full px-3 py-1.5 text-xs rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white outline-none focus:border-indigo-500"
+                placeholder="Twitter Profile URL"
+                value={socials.twitter || ""}
                 onChange={(e) =>
                   setSocials((s) => ({ ...s, twitter: e.target.value }))
                 }
@@ -243,19 +244,19 @@ const Profile = ({ user }) => {
               />
               <input
                 type="text"
-                className="border border-blue-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded p-2 text-gray-900 dark:text-white"
-                placeholder="Instagram URL"
-                value={socials.instagram}
+                className="w-full px-3 py-1.5 text-xs rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white outline-none focus:border-indigo-500"
+                placeholder="Instagram Profile URL"
+                value={socials.instagram || ""}
                 onChange={(e) =>
                   setSocials((s) => ({ ...s, instagram: e.target.value }))
                 }
                 disabled={isLoading}
               />
-              <div className="flex gap-2">
+              <div className="flex gap-2 mt-1">
                 <button
                   onClick={handleSocialsSave}
                   disabled={isLoading}
-                  className="px-4 py-1.5 rounded-lg bg-gradient-to-r from-green-400 to-blue-600 text-white font-bold shadow disabled:opacity-80"
+                  className="px-3 py-1.5 text-[10px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm cursor-pointer"
                 >
                   Save
                 </button>
@@ -265,45 +266,41 @@ const Profile = ({ user }) => {
                     setSocials(user?.socials || defaultSocials);
                   }}
                   disabled={isLoading}
-                  className="px-3 py-1.5 rounded-lg border border-blue-300 dark:border-slate-700 text-blue-700 dark:text-green-200 bg-white dark:bg-slate-900"
+                  className="px-3 py-1.5 text-[10px] font-bold border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 rounded-lg cursor-pointer"
                 >
                   Cancel
                 </button>
               </div>
               {socialError && (
-                <div className="text-red-600 text-xs ml-1">{socialError}</div>
+                <div className="text-rose-500 text-[10px] font-semibold">{socialError}</div>
               )}
             </div>
           )}
         </div>
       </div>
-      {/* Right: Info Cards and Badges */}
-      <div className="flex-1 flex flex-col gap-8">
-        <div className="flex flex-wrap gap-6">
-          <div className="flex-1 min-w-[180px] bg-gradient-to-r from-blue-50 to-green-50 dark:from-slate-900/80 dark:to-green-900/80 border border-blue-100 dark:border-green-900 px-7 py-5 rounded-xl flex items-center gap-3 shadow">
-            <User className="w-7 h-7 text-blue-700 dark:text-green-300" />
+
+      {/* Right Column */}
+      <div className="flex-grow w-full flex flex-col gap-8">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="yc-card bg-slate-50/50 dark:bg-slate-950/20 px-5 py-4 border border-slate-200/50 dark:border-white/5 flex items-center gap-3">
+            <User className="w-5 h-5 text-indigo-500 shrink-0" />
             <div>
-              <div className="text-blue-800 dark:text-green-200 font-semibold">
-                Role
-              </div>
-              <div className="text-gray-600 dark:text-gray-300 text-sm">
+              <div className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">Role</div>
+              <div className="text-slate-800 dark:text-slate-200 text-sm font-bold leading-tight">
                 {user?.role || "User"}
               </div>
             </div>
           </div>
-          <div className="flex-1 min-w-[180px] bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/80 dark:to-slate-900/80 border border-blue-100 dark:border-green-900 px-7 py-5 rounded-xl flex items-center gap-3 shadow">
-            <span className="w-7 h-7 flex items-center justify-center text-xl text-green-400">
-              <Calendar className="w-7 h-7" />
-            </span>
+
+          <div className="yc-card bg-slate-50/50 dark:bg-slate-950/20 px-5 py-4 border border-slate-200/50 dark:border-white/5 flex items-center gap-3">
+            <Calendar className="w-5 h-5 text-indigo-500 shrink-0" />
             <div>
-              <div className="text-blue-800 dark:text-green-200 font-semibold">
-                Joined
-              </div>
-              <div className="text-gray-600 dark:text-gray-300 text-sm">
+              <div className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">Joined</div>
+              <div className="text-slate-800 dark:text-slate-200 text-sm font-bold leading-tight font-mono">
                 {user?.createdAt
-                  ? new Date(user.createdAt).toLocaleDateString("en-US", {
+                  ? new Date(user.createdAt).toLocaleDateString("en-IN", {
                       year: "numeric",
-                      month: "long",
+                      month: "short",
                       day: "numeric",
                     })
                   : "-"}
@@ -311,39 +308,36 @@ const Profile = ({ user }) => {
             </div>
           </div>
         </div>
-        {/* Badges */}
+
+        {/* Badges section */}
         {user?.badges?.length > 0 && (
           <div>
-            <h3 className="text-xl font-bold mb-3 text-blue-700 dark:text-green-300 tracking-wide">
-              Badges
+            <h3 className="text-xs font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">
+              My Badges
             </h3>
-            <div className="flex flex-wrap items-center gap-4 min-h-[70px]">
+            <div className="flex flex-wrap gap-3">
               {user?.badges.slice(0, 5).map((badge, idx) => {
                 const badgeDetail = BADGE_DETAILS[badge] || {};
                 return (
-                  <span
+                  <div
                     key={idx}
-                    className="flex items-center gap-3 bg-gradient-to-r from-green-400 via-blue-400 to-blue-700
-                 text-white px-6 py-3 text-base md:text-lg font-semibold
-                 rounded-full shadow-lg hover:scale-105 transition border-2 border-white/40"
+                    className="flex items-center gap-2.5 px-4 py-2 border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 rounded-xl shadow-sm hover:border-indigo-500 transition-all duration-200"
                     title={badgeDetail.desc || badge}
-                    style={{ letterSpacing: "0.5px" }}
                   >
-                    {/* Show the actual icon for the badge */}
-                    <span className="text-2xl drop-shadow-sm flex items-center">
-                      {badgeDetail.icon || (
-                        <Trophy className="w-8 h-8 text-yellow-400" />
-                      )}
+                    <div className="shrink-0 flex items-center justify-center">
+                      {badgeDetail.icon || <Trophy className="w-5 h-5 text-indigo-500" />}
+                    </div>
+                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                      {badgeDetail.label || badge}
                     </span>
-                    <span>{badgeDetail.label || badge}</span>
-                  </span>
+                  </div>
                 );
               })}
 
               {user?.badges.length > 5 && (
-                <span className="px-5 py-2 text-base rounded-full bg-blue-100 text-blue-700 dark:bg-slate-800 dark:text-green-300 font-bold shadow">
-                  +{user.badges.length - 5} more
-                </span>
+                <div className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold text-slate-500 dark:text-slate-400 shadow-sm flex items-center justify-center">
+                  +{user.badges.length - 5} More
+                </div>
               )}
             </div>
           </div>

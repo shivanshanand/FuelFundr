@@ -1,25 +1,25 @@
 import CountUp from "react-countup";
+import { motion } from "framer-motion";
 
-// Pass stats as props!
 const StatsBar = ({ stats }) => (
-  <section className="w-full px-2 sm:px-0 py-6 bg-gradient-to-r from-blue-100 to-green-100 dark:from-slate-900 dark:to-green-950">
-    <div className="flex flex-col sm:flex-row max-w-6xl mx-auto divide-y sm:divide-y-0 sm:divide-x divide-blue-300 dark:divide-green-900">
-      {stats.map((stat) => (
-        <div
+  <section className="w-full py-10 bg-slate-50/50 dark:bg-slate-950/25 border-y border-slate-200/50 dark:border-white/5 transition-colors duration-200">
+    <div className="grid grid-cols-2 md:grid-cols-4 max-w-6xl mx-auto gap-y-6 md:gap-y-0 md:divide-x divide-slate-200 dark:divide-white/5">
+      {stats.map((stat, idx) => (
+        <motion.div
           key={stat.label}
-          className={`
-            flex-1 flex flex-col justify-center items-center py-5 sm:py-7 px-2
-            min-w-0
-          `}
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5, delay: idx * 0.1 }}
+          className="flex flex-col justify-center items-center px-4"
         >
-          <div className="font-bold text-2xl sm:text-3xl md:text-4xl text-blue-700 dark:text-green-300 flex items-center gap-1">
+          <div className="font-mono text-2xl sm:text-3xl md:text-4xl text-slate-900 dark:text-white font-black tracking-tight flex items-center select-none">
             {stat.prefix || ""}
-            <span className="count-up">
+            <span>
               <CountUp
                 end={stat.value}
-                duration={1.3}
+                duration={1.5}
                 separator=","
-                decimals={stat.value < 1 ? 3 : 0}
                 formattingFn={(n) => {
                   if (n >= 1e7) return (n / 1e7).toFixed(1) + "Cr";
                   if (n >= 1e5) return (n / 1e5).toFixed(1) + "L";
@@ -29,15 +29,12 @@ const StatsBar = ({ stats }) => (
             </span>
             {stat.suffix || ""}
           </div>
-          <div className="text-xs sm:text-sm text-gray-600 dark:text-green-100 font-bold uppercase tracking-wide mt-2 text-center whitespace-pre-line">
+          <div className="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 font-mono font-bold uppercase tracking-widest mt-2 text-center">
             {stat.label}
           </div>
-        </div>
+        </motion.div>
       ))}
     </div>
-    <style>{`
-      .count-up { transition: color 0.5s; }
-    `}</style>
   </section>
 );
 

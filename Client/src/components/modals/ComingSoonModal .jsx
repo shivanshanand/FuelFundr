@@ -1,30 +1,35 @@
+import { X } from "lucide-react";
+
 const ComingSoonModal = ({ show, onClose }) => {
   if (!show) return null;
+  
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-2 py-6">
-      <div className="bg-white/95 dark:bg-slate-900/90 rounded-2xl shadow-2xl border-4 border-blue-400 max-w-sm w-full px-6 py-9 text-center flex flex-col items-center animate-in zoom-in fade-in mx-auto relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-xs px-6 select-none">
+      <div className="relative w-full max-w-sm yc-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 p-8 text-center flex flex-col items-center shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+        
+        {/* Close Button */}
         <button
-          className="absolute top-3 right-4 text-2xl text-blue-700 dark:text-green-300 hover:text-red-500 transition"
+          className="absolute top-4 right-4 p-1.5 rounded-lg border border-slate-200 dark:border-white/10 text-slate-400 hover:text-slate-650 hover:border-slate-300 dark:hover:text-white dark:hover:border-slate-800 transition cursor-pointer"
           onClick={onClose}
+          aria-label="Close"
         >
-          ×
+          <X className="w-4 h-4" />
         </button>
-        <span className="text-[2.25rem] sm:text-[2.75rem] mb-2 animate-bounce">
-          🚧
-        </span>
-        <h2 className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-blue-700 to-green-400 bg-clip-text text-transparent tracking-tight mb-4">
-          Coming Soon!
+
+        <span className="text-4xl mb-2 animate-bounce-custom">🚧</span>
+        <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-2">
+          Coming Soon
         </h2>
-        <p className="text-lg text-gray-700 dark:text-green-100 mb-3">
-          Our community features will launch soon.
-          <br />
-          Stay tuned!
+        
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-6 max-w-xs leading-relaxed">
+          This community engagement module is under active construction. Stay tuned for features!
         </p>
+
         <button
           onClick={onClose}
-          className="mt-2 inline-flex justify-center items-center px-7 py-2 rounded-xl bg-gradient-to-r from-blue-700 to-green-400 text-white font-bold shadow hover:from-blue-800 hover:to-green-500 transition text-base sm:text-lg"
+          className="w-full py-2.5 rounded-xl font-bold text-white text-xs bg-indigo-600 hover:bg-indigo-700 transition cursor-pointer uppercase tracking-widest"
         >
-          Got it!
+          Got it
         </button>
       </div>
     </div>

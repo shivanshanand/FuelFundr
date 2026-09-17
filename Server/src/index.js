@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import helmet from "helmet";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import campaignRoutes from "./routes/campaignRoutes.js";
@@ -20,6 +21,44 @@ const PORT = process.env.PORT;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
+
+// Apply Security Headers (Helmet) with customized CSP for Razorpay/Cloudinary
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        "script-src": [
+          "'self'",
+          "'unsafe-inline'",
+          "'unsafe-eval'",
+          "https://checkout.razorpay.com",
+          "https://api.razorpay.com",
+        ],
+        "connect-src": [
+          "'self'",
+          "https://api.razorpay.com",
+          process.env.FRONTEND_URL || "http://localhost:5173",
+        ],
+        "frame-src": [
+          "'self'",
+          "https://api.razorpay.com",
+          "https://checkout.razorpay.com",
+        ],
+        "img-src": [
+          "'self'",
+          "data:",
+          "https://res.cloudinary.com",
+          "https://checkout.razorpay.com",
+        ],
+        "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        "font-src": ["'self'", "https://fonts.gstatic.com", "data:"],
+      },
+    },
+    crossOriginOpenerPolicy: { policy: "same-origin" },
+    crossOriginEmbedderPolicy: false, // Turned off to allow Razorpay and Cloudinary media/scripts
+  })
+);
 
 // Connect to database
 connectDB();
