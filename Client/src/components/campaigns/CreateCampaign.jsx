@@ -109,92 +109,96 @@ const CreateCampaign = () => {
   const stepProps = { campaignData, updateCampaignData };
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
       <CreateCampaignNavbar />
-      <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-blue-100 dark:from-slate-900 dark:via-slate-950 dark:to-blue-900 transition-colors duration-300 p-0 md:p-6">
-        <div className="pt-5 px-2 sm:pl-6">
+      
+      <div className="max-w-3xl w-full mx-auto px-6 py-10 flex-grow">
+        {/* Back navigation */}
+        <div className="mb-6">
           <button
             onClick={() =>
               window.history.length > 1 ? navigate(-1) : navigate("/")
             }
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-700 to-green-400 text-white font-bold shadow hover:from-blue-800 hover:to-green-700 transition text-sm md:text-base"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 hover:border-indigo-500 bg-white/50 dark:bg-slate-900/50 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold cursor-pointer shadow-sm transition-all duration-200"
           >
-            <ArrowLeft className="w-5 h-5" />
-            Back
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back</span>
           </button>
         </div>
-        <div className="max-w-4xl mx-auto mt-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-extrabold bg-gradient-to-r from-blue-700 to-green-400 bg-clip-text text-transparent">
-              Create Your Campaign
-            </h1>
-            <div className="px-4 py-2 bg-gradient-to-r from-blue-700 to-green-400 text-white rounded-full text-sm font-medium shadow">
-              Step {currentStep} of 4
-            </div>
+
+        {/* Title Header */}
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-8 gap-2">
+          <h1 className="text-3xl font-black text-slate-950 dark:text-white tracking-tighter">
+            Create Campaign
+          </h1>
+          <div className="text-xs font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+            Step {currentStep} of 4
           </div>
+        </div>
 
-          {/* Premium Themed Timeline Stepper */}
-          <WizardStepper currentStep={currentStep} />
+        {/* Stepper progress indicator */}
+        <WizardStepper currentStep={currentStep} />
 
-          {/* Error Message */}
-          {error && (
-            <div className="bg-red-900 border border-red-700 rounded-xl p-4 mb-6 shadow">
-              <p className="text-red-200">{error}</p>
-            </div>
-          )}
+        {/* Error notification */}
+        {error && (
+          <div className="bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 rounded-xl p-4 mb-6 text-sm font-semibold">
+            {error}
+          </div>
+        )}
 
-          {/* Main Wizard Card */}
-          <div className="bg-white/90 dark:bg-slate-900/80 rounded-2xl p-8 mb-8 border border-blue-200 dark:border-slate-800 shadow-lg">
-            {/* Step Content */}
+        {/* Wizard Main Card */}
+        <div className="yc-card p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 shadow-sm">
+          {/* Active wizard step */}
+          <div className="mb-8">
             {currentStep === 1 && <BasicInfoStep {...stepProps} />}
             {currentStep === 2 && <DetailsStep {...stepProps} />}
             {currentStep === 3 && <FundingStep {...stepProps} />}
             {currentStep === 4 && <ReviewStep campaignData={campaignData} />}
+          </div>
 
-            {/* Navigation */}
-            <div className="flex justify-between gap-4 mt-10 flex-wrap">
+          {/* Stepper buttons action block */}
+          <div className="flex justify-between items-center border-t border-slate-100 dark:border-slate-800/40 pt-6">
+            <button
+              onClick={handlePrevious}
+              disabled={currentStep === 1 || isLoading}
+              className={`flex items-center px-4 py-2 text-xs font-bold rounded-lg border transition-colors cursor-pointer ${
+                currentStep === 1 || isLoading
+                  ? "text-slate-300 dark:text-slate-700 border-slate-100 dark:border-slate-850 cursor-not-allowed bg-transparent"
+                  : "text-slate-700 dark:text-slate-200 border-slate-200 dark:border-white/10 hover:border-indigo-500 bg-white dark:bg-slate-900"
+              }`}
+            >
+              <ChevronLeft className="w-4 h-4 mr-1 text-slate-400" />
+              Previous
+            </button>
+
+            {currentStep < 4 ? (
               <button
-                onClick={handlePrevious}
-                disabled={currentStep === 1 || isLoading}
-                className={`flex items-center px-5 py-2 rounded-lg font-semibold border border-blue-200 dark:border-slate-700 shadow text-lg transition-colors duration-200 ${
-                  currentStep === 1 || isLoading
-                    ? "text-gray-400 bg-transparent cursor-not-allowed"
-                    : "text-blue-700 dark:text-green-300 bg-white/70 dark:bg-slate-900/70 hover:bg-blue-50 dark:hover:bg-slate-800"
-                }`}
+                onClick={handleNext}
+                disabled={isLoading}
+                className="flex items-center px-4 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors cursor-pointer"
               >
-                <ChevronLeft className="w-5 h-5 mr-1" />
-                Previous
+                Next
+                <ChevronRight className="w-4 h-4 ml-1" />
               </button>
-              {currentStep < 4 ? (
-                <button
-                  onClick={handleNext}
-                  disabled={isLoading}
-                  className="flex items-center px-5 py-2 text-white rounded-lg font-semibold text-lg transition-colors duration-200 bg-gradient-to-r from-green-400 to-blue-600 shadow hover:from-green-500 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Next
-                  <ChevronRight className="w-5 h-5 ml-1" />
-                </button>
-              ) : (
-                <button
-                  onClick={handleSubmit}
-                  disabled={isLoading}
-                  className="flex items-center px-5 py-2 text-white rounded-lg font-semibold text-lg transition-colors duration-200 bg-gradient-to-r from-green-500 to-blue-500 shadow hover:from-green-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? (
-                    <span className="flex items-center gap-2">
-                      <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                      Creating...
-                    </span>
-                  ) : (
-                    <>
-                      <Rocket className="w-5 h-5 mr-2" />
-                      Publish Campaign
-                    </>
-                  )}
-                </button>
-              )}
-            </div>
+            ) : (
+              <button
+                onClick={handleSubmit}
+                disabled={isLoading}
+                className="flex items-center px-5 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors shadow-sm cursor-pointer"
+              >
+                {isLoading ? (
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Creating...
+                  </span>
+                ) : (
+                  <>
+                    <Rocket className="w-4 h-4 mr-1.5" />
+                    Publish Campaign
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -207,7 +211,7 @@ const CreateCampaign = () => {
           navigate("/campaigns");
         }}
       />
-    </>
+    </div>
   );
 };
 

@@ -46,16 +46,16 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-white to-blue-50 dark:from-slate-900 dark:via-slate-950 dark:to-blue-900 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors duration-200 px-6 select-none">
       <motion.div
-        initial={{ opacity: 0, y: 32 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-md w-full bg-white dark:bg-slate-900/80 bg-opacity-95 backdrop-blur-xl rounded-2xl shadow-2xl border border-blue-200 dark:border-slate-800 overflow-hidden transition-colors duration-300"
+        transition={{ duration: 0.4 }}
+        className="max-w-sm w-full yc-card overflow-hidden shadow-xl"
       >
         <div className="p-8">
-          <h2 className="text-3xl font-extrabold text-center mb-8 bg-gradient-to-r from-blue-700 to-green-400 bg-clip-text text-transparent">
-            Create Account
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter mb-6 text-center">
+            Sign Up
           </h2>
           <form onSubmit={handleSignUp} autoComplete="off">
             <Input
@@ -79,33 +79,30 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <div className="mt-3">
-              <PasswordStrengthMeter password={password} />
-            </div>
+            <PasswordStrengthMeter password={password} />
 
-            <motion.button
-              className="mt-7 w-full py-3 px-4 bg-gradient-to-r from-blue-700 to-green-400 text-white font-bold rounded-xl shadow-lg hover:from-blue-800 hover:to-green-500 focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 transition-all duration-200"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
+            <button
+              className="mt-6 w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm hover:shadow-indigo-600/10 transition cursor-pointer flex items-center justify-center"
               type="submit"
               disabled={isLoading}
             >
               {isLoading ? (
-                <Loader className="animate-spin mx-auto" size={24} />
+                <Loader className="animate-spin w-4 h-4" />
               ) : (
                 "Sign Up"
               )}
-            </motion.button>
+            </button>
           </form>
         </div>
-        <div className="px-8 py-4 bg-blue-50 dark:bg-slate-800 flex justify-center border-t border-blue-200 dark:border-slate-700">
-          <p className="text-sm text-gray-600 dark:text-gray-300">
+        
+        <div className="px-8 py-4 bg-slate-50 dark:bg-slate-950/40 flex justify-center border-t border-slate-200/50 dark:border-white/5">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Already have an account?{" "}
             <Link
-              to={"/login"}
-              className="text-green-500 hover:underline font-semibold"
+              to="/login"
+              className="text-indigo-600 dark:text-indigo-400 hover:underline font-bold"
             >
-              Login
+              Sign In
             </Link>
           </p>
         </div>
@@ -113,4 +110,5 @@ const Register = () => {
     </div>
   );
 };
+
 export default Register;

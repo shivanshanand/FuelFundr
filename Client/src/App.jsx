@@ -1,19 +1,22 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useAuthStore } from "./store/authStore";
 
+// Eager-loaded: Home is the landing page (critical path)
 import Home from "./pages/ui/Home";
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import Dashboard from "./pages/ui/Dashboard";
-import ForgotPassword from "./pages/auth/ForgotPassword";
-import ResetPassword from "./pages/auth/ResetPassword";
-import EmailVerification from "./pages/auth/EmailVerification";
-import CampaignDetails from "./components/campaigns/CampaignDetails";
-import CreateCampaign from "./components/campaigns/CreateCampaign";
-import CampaignList from "./pages/ui/CampaignList";
-import LeaderboardPage from "./pages/ui/LeaderboardPage";
-import About from "./pages/ui/About";
+
+// Lazy-loaded: all other routes get their own chunks
+const Login = lazy(() => import("./pages/auth/Login"));
+const Register = lazy(() => import("./pages/auth/Register"));
+const Dashboard = lazy(() => import("./pages/ui/Dashboard"));
+const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
+const EmailVerification = lazy(() => import("./pages/auth/EmailVerification"));
+const CampaignDetails = lazy(() => import("./components/campaigns/CampaignDetails"));
+const CreateCampaign = lazy(() => import("./components/campaigns/CreateCampaign"));
+const CampaignList = lazy(() => import("./pages/ui/CampaignList"));
+const LeaderboardPage = lazy(() => import("./pages/ui/LeaderboardPage"));
+const About = lazy(() => import("./pages/ui/About"));
 
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import RedirectAuthenticatedUser from "./utils/RedirectAuthenticatedUser";
@@ -58,6 +61,7 @@ function App() {
   // Main app routing after splash and auth check
   return (
     <Router>
+      <Suspense fallback={<LoadingSpinner />}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
@@ -121,6 +125,7 @@ function App() {
           }
         />
       </Routes>
+      </Suspense>
       <ToastContainer position="top-right" theme="dark" autoClose={3000} />
     </Router>
   );

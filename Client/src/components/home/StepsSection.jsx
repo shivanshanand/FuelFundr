@@ -1,80 +1,91 @@
 import { UserPlus, Rocket, Wallet } from "lucide-react";
+import { motion } from "framer-motion";
 
 const steps = [
   {
-    icon: <UserPlus className="w-10 h-10 text-blue-500 animate-wiggle" />,
-    title: "Register",
-    desc: "Sign up for free and join the community.",
+    icon: <UserPlus className="w-8 h-8 text-indigo-500" />,
+    title: "Register Account",
+    desc: "Sign up in seconds using your email or Google OAuth.",
   },
   {
-    icon: <Rocket className="w-10 h-10 text-green-400 animate-bounce" />,
-    title: "Create Campaign",
-    desc: "Share your story and set your funding goal.",
+    icon: <Rocket className="w-8 h-8 text-indigo-500" />,
+    title: "Launch Campaign",
+    desc: "Write your description, upload an image, and set your funding target.",
   },
   {
-    icon: <Wallet className="w-10 h-10 text-yellow-400 animate-flip" />,
-    title: "Receive Funds",
-    desc: "Get instant support and start building your dream.",
+    icon: <Wallet className="w-8 h-8 text-indigo-500" />,
+    title: "Receive Contributions",
+    desc: "Receive donations directly, unlock achievements, and withdraw funds.",
   },
 ];
 
-const StepsSection = () => (
-  <section className="w-full px-3 md:px-0 py-14 md:py-24 bg-transparent flex flex-col items-center">
-    <h2 className="text-[1.5rem] sm:text-[2.3rem] md:text-[2.7rem] font-extrabold mb-12 text-center bg-gradient-to-r from-blue-700 to-green-400 bg-clip-text text-transparent leading-tight tracking-tight drop-shadow">
-      New to Fundraising?
-      <br className="sm:hidden" />
-      <span className="block md:inline"> Raise in 3 Simple Steps</span>
-    </h2>
-    <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-0 gap-x-0 md:gap-x-10 items-stretch">
-      {steps.map((step, idx) => (
-        <div
-          key={step.title}
-          className="flex flex-col gap-4 items-center text-center relative min-w-0"
-        >
-          <div className="mx-auto rounded-full bg-white/80 dark:bg-slate-900/80 shadow-2xl border-2 border-blue-100 dark:border-green-900 flex items-center justify-center w-20 h-20 md:w-24 md:h-24 mb-2">
-            {step.icon}
-          </div>
-          <div className="font-bold text-lg sm:text-xl text-blue-700 dark:text-green-400">
-            {step.title}
-          </div>
-          <div className="text-gray-600 dark:text-green-100 text-[1.05rem] px-2 md:px-0">
-            {step.desc}
-          </div>
-          {/* Connector Arrow */}
-          {idx < steps.length - 1 && (
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 32 32"
-              className="hidden md:block absolute top-1/2 right-[-30px] -translate-y-1/2 text-blue-400 animate-pulse"
-            >
-              <path
-                d="M6 16 H26 M22 12 L26 16 L22 20"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                fill="none"
-                strokeLinecap="round"
+const StepsSection = () => {
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
+  return (
+    <section className="w-full py-20 px-6 flex flex-col items-center bg-slate-50/50 dark:bg-slate-950/10 border-y border-slate-200/50 dark:border-white/5 transition-colors duration-200 select-none">
+      <motion.h2
+        initial={{ opacity: 0, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.5 }}
+        className="text-3xl md:text-4xl font-black text-center text-slate-900 dark:text-white mb-16 tracking-tighter"
+      >
+        How It Works
+      </motion.h2>
+
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-0 gap-x-8 items-stretch"
+      >
+        {steps.map((step, idx) => (
+          <motion.div
+            key={step.title}
+            variants={itemVariants}
+            className="flex flex-col items-center text-center relative"
+          >
+            {/* Circle timeline indicator */}
+            <div className="w-20 h-20 rounded-full bg-indigo-500/5 border border-indigo-500/15 flex items-center justify-center mb-6 relative">
+              {step.icon}
+              <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-mono font-bold text-xs flex items-center justify-center border border-slate-200 dark:border-slate-800 shadow">
+                {idx + 1}
+              </span>
+            </div>
+
+            <h3 className="font-bold text-slate-800 dark:text-white text-lg mb-2">
+              {step.title}
+            </h3>
+            <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-xs">
+              {step.desc}
+            </p>
+
+            {/* Horizontal timeline link indicator for Desktop */}
+            {idx < steps.length - 1 && (
+              <div
+                className="hidden md:block absolute top-10 left-[calc(50%+4rem)] right-[calc(-50%+4rem)] h-[1px] bg-slate-200 dark:bg-slate-800"
+                aria-hidden="true"
               />
-            </svg>
-          )}
-        </div>
-      ))}
-    </div>
-    <style>{`
-      @keyframes wiggle {
-        0%, 100% { transform: rotate(-7deg);}
-        50% { transform: rotate(8deg);}
-      }
-      .animate-wiggle { animation: wiggle 1.4s infinite;}
-      .animate-flip { animation: flip 1.2s infinite; }
-      @keyframes flip {0% {transform: rotateY(0);} 50% {transform: rotateY(180deg);} 100% {transform: rotateY(0);}
-      }
-      .animate-bounce { animation: bounce 1.3s infinite; }
-      @keyframes bounce {
-        0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);}
-      }
-    `}</style>
-  </section>
-);
+            )}
+          </motion.div>
+        ))}
+      </motion.div>
+    </section>
+  );
+};
 
 export default StepsSection;

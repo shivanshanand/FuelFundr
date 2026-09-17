@@ -1,5 +1,6 @@
 import Confetti from "react-confetti";
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 
 const WithdrawSuccessModal = ({ show, amount, onClose }) => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -15,27 +16,35 @@ const WithdrawSuccessModal = ({ show, amount, onClose }) => {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm px-2 py-6 sm:py-0">
-      <Confetti width={dimensions.width} height={dimensions.height} />
-      <div className="bg-white/95 dark:bg-slate-900/90 rounded-2xl shadow-2xl border-4 border-green-400 max-w-sm w-full px-4 sm:px-7 py-7 sm:py-8 text-center flex flex-col items-center animate-in zoom-in fade-in mx-auto">
-        <span className="text-[2.25rem] sm:text-[3rem] mb-1 -mt-2 sm:-mt-3 animate-bounce">
-          🎉
-        </span>
-        <h2 className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-green-500 to-blue-400 bg-clip-text text-transparent tracking-tight mb-3">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-xs px-6 select-none">
+      <Confetti width={dimensions.width} height={dimensions.height} numberOfPieces={80} recycle={false} />
+      
+      <div className="relative w-full max-w-sm yc-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 p-8 text-center flex flex-col items-center shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+        {/* Close Button */}
+        <button
+          className="absolute top-4 right-4 p-1.5 rounded-lg border border-slate-200 dark:border-white/10 text-slate-400 hover:text-slate-650 hover:border-slate-300 dark:hover:text-white dark:hover:border-slate-800 transition cursor-pointer"
+          onClick={onClose}
+          aria-label="Close"
+        >
+          <X className="w-4 h-4" />
+        </button>
+
+        <span className="text-4xl mb-2 animate-bounce-custom">🎉</span>
+        <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-2">
           Withdrawal Successful!
         </h2>
-        <div className="my-2 text-lg sm:text-xl font-bold">
-          You withdrew{" "}
-          <span className="bg-gradient-to-r from-green-500 to-blue-400 bg-clip-text text-transparent">
-            ₹{amount}
-          </span>
-        </div>
-        <div className="text-gray-700 dark:text-gray-200 mb-7 font-medium">
-          to your wallet
-        </div>
+        
+        <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
+          You withdrew <span className="font-mono font-black text-indigo-500">₹{amount?.toLocaleString()}</span>
+        </p>
+        
+        <p className="text-xs text-slate-550 dark:text-slate-450 mb-6">
+          successfully credited to your wallet balance.
+        </p>
+
         <button
-          className="inline-flex justify-center items-center px-7 sm:px-8 py-2 rounded-xl bg-gradient-to-r from-green-500 to-blue-400 text-white font-bold shadow hover:from-green-600 hover:to-blue-700 transition text-base sm:text-lg"
           onClick={onClose}
+          className="w-full py-2.5 rounded-xl font-bold text-white text-xs bg-indigo-600 hover:bg-indigo-700 transition cursor-pointer uppercase tracking-widest"
         >
           Close
         </button>

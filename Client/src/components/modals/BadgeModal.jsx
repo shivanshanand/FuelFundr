@@ -1,30 +1,30 @@
 import Confetti from "react-confetti";
 import { useEffect, useState } from "react";
-import { Award, Gift, Rocket, Trophy, Users } from "lucide-react";
+import { Award, Gift, Rocket, Trophy, Users, X } from "lucide-react";
 
 const BADGE_DETAILS = {
   "First Donation": {
-    icon: <Gift className="w-8 h-8 text-yellow-400 animate-wiggle-slow" />,
+    icon: <Gift className="w-8 h-8 text-indigo-500 animate-float" />,
     label: "First Donation",
     desc: "Made your very first donation. Welcome to the community!",
   },
   Contributor: {
-    icon: <Users className="w-8 h-8 text-blue-400 animate-bounce" />,
+    icon: <Users className="w-8 h-8 text-indigo-500 animate-icon-pulse" />,
     label: "Contributor",
     desc: "Made 3+ donations to support campaigns.",
   },
   Supporter: {
-    icon: <Award className="w-8 h-8 text-green-400 animate-tada" />,
+    icon: <Award className="w-8 h-8 text-indigo-500 animate-wiggle" />,
     label: "Supporter",
     desc: "Donated a total of ₹1,000 or more.",
   },
   Campaigner: {
-    icon: <Rocket className="w-8 h-8 text-pink-400 animate-spin-slow" />,
+    icon: <Rocket className="w-8 h-8 text-indigo-500 animate-float-delayed" />,
     label: "Campaigner",
     desc: "Started your first campaign.",
   },
   Fundraiser: {
-    icon: <Trophy className="w-8 h-8 text-orange-400 animate-bounce-slow" />,
+    icon: <Trophy className="w-8 h-8 text-indigo-500 animate-icon-bounce" />,
     label: "Fundraiser",
     desc: "Started 3+ campaigns.",
   },
@@ -47,57 +47,58 @@ const BadgeModal = ({ show, badges = [], onClose }) => {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm px-2 py-6 sm:py-0">
-      <Confetti width={dimensions.width} height={dimensions.height} />
-      <div className="bg-white/95 dark:bg-slate-900/90 border-4 border-green-400 rounded-2xl shadow-2xl w-full max-w-md px-4 sm:px-8 py-6 sm:py-7 pb-9 text-center flex flex-col items-center animate-in fade-in zoom-in mx-auto">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-slate-950/60 backdrop-blur-xs px-6">
+      <Confetti width={dimensions.width} height={dimensions.height} numberOfPieces={80} recycle={false} />
+      
+      <div className="relative yc-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 w-full max-w-sm p-8 text-center flex flex-col items-center animate-in fade-in zoom-in-95 duration-200 shadow-2xl">
+        {/* Close Button */}
         <button
-          className="
-    absolute top-3 right-3 
-    w-10 h-10 
-    flex items-center justify-center
-    rounded-full 
-    bg-green-500/85 hover:bg-blue-600 transition-colors
-    text-white text-2xl font-extrabold shadow-lg border-2 border-white/70
-    focus:outline-none focus:ring-2 focus:ring-blue-500
-    z-10
-  "
+          className="absolute top-4 right-4 p-1.5 rounded-lg border border-slate-200 dark:border-white/10 text-slate-400 hover:text-slate-650 hover:border-slate-300 dark:hover:text-white dark:hover:border-slate-800 transition cursor-pointer"
           onClick={onClose}
           aria-label="Close Modal"
         >
-          ×
+          <X className="w-4 h-4" />
         </button>
 
-        <span className="text-5xl sm:text-6xl mb-1 animate-bounce">🎉</span>
-        <h2 className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent mb-4 tracking-tight">
-          You earned a badge!
+        <span className="text-4xl mb-2 animate-bounce-custom">🎉</span>
+        <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-6">
+          New Badge Unlocked!
         </h2>
-        <ul className="space-y-3 mb-2 w-full">
+        
+        <div className="w-full space-y-4 mb-6">
           {badges.map((badge, i) => {
             const info = BADGE_DETAILS[badge] || {
-              icon: "🏅",
-              name: badge,
+              icon: <Trophy className="w-8 h-8 text-indigo-500" />,
+              label: badge,
               desc: "",
             };
             return (
-              <li
+              <div
                 key={i}
-                className="flex flex-col items-center justify-center gap-2 text-base sm:text-lg font-semibold text-blue-900 dark:text-green-300 bg-green-50 dark:bg-slate-800/50 py-2 px-4 rounded-xl shadow"
+                className="flex flex-col items-center justify-center p-6 rounded-xl border border-slate-150 dark:border-white/5 bg-slate-50/50 dark:bg-slate-950/20"
               >
-                <span className="text-3xl">{info.icon}</span>
-                <span className="font-bold">{info.label}</span>
+                <div className="w-12 h-12 rounded-lg bg-indigo-500/5 flex items-center justify-center border border-indigo-500/10 mb-3 shrink-0">
+                  {info.icon}
+                </div>
+                <h4 className="font-bold text-slate-900 dark:text-white text-base mb-1.5">
+                  {info.label}
+                </h4>
                 {info.desc && (
-                  <span className="text-sm text-green-700 dark:text-green-300">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-[220px]">
                     {info.desc}
-                  </span>
+                  </p>
                 )}
-              </li>
+              </div>
             );
           })}
-        </ul>
+        </div>
 
-        <span className="mt-2 text-green-500 dark:text-green-300 text-sm sm:text-base font-semibold tracking-wide">
-          Keep going for more achievements!
-        </span>
+        <button
+          onClick={onClose}
+          className="w-full py-2.5 rounded-xl font-bold text-white text-xs bg-indigo-600 hover:bg-indigo-700 transition cursor-pointer uppercase tracking-widest"
+        >
+          Awesome
+        </button>
       </div>
     </div>
   );

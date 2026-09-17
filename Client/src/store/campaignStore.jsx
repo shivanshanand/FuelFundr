@@ -2,6 +2,7 @@
 import { create } from "zustand";
 import axios from "axios";
 import { useWalletStore } from "./walletStore";
+import { loadRazorpay } from "../utils/loadRazorpay";
 
 const API_URL = import.meta.env.VITE_API_URL;
 axios.defaults.withCredentials = true;
@@ -124,7 +125,8 @@ export const useCampaignStore = create((set) => ({
         { amount }
       );
 
-      // 2. Trigger Razorpay checkout
+      // 2. Load Razorpay SDK on demand, then trigger checkout
+      await loadRazorpay();
       await new Promise((resolve, reject) => {
         const razorpay = new window.Razorpay({
           key: import.meta.env.VITE_RAZORPAY_KEY_ID,

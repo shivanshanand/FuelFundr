@@ -8,8 +8,7 @@ import UserSuccessStoriesSection from "../../components/about/UserSuccessStories
 
 const About = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-900 via-blue-950 to-green-950 dark:from-slate-900 dark:via-blue-950 dark:to-green-950 transition-colors relative">
-      {/* All About Sections */}
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
       <AboutHeroSection />
       <VisionMissionSection />
       <TeamSection />

@@ -63,6 +63,7 @@ const CampaignDetails = () => {
     deadline,
     createdBy,
     image,
+    category,
     donors = [],
   } = currentCampaign;
 
@@ -181,11 +182,21 @@ const CampaignDetails = () => {
 
   if (isLoading || !currentCampaign)
     return (
-      <div className="flex w-full justify-center items-center min-h-[400px]">
-        <LoaderCircleIcon className="w-16 h-16 animate-spin text-blue-700 dark:text-green-300" />
+      <div className="flex w-full flex-col justify-center items-center min-h-[400px] gap-3">
+        <div className="w-8 h-8 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
+        <span className="text-xs font-mono text-slate-500 uppercase tracking-widest animate-pulse">
+          Loading Campaign details...
+        </span>
       </div>
     );
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (error)
+    return (
+      <div className="flex w-full justify-center items-center min-h-[400px]">
+        <span className="text-rose-500 text-xs font-mono font-bold uppercase tracking-widest">
+          Error loading campaign details: {error}
+        </span>
+      </div>
+    );
 
   const percent =
     targetAmount > 0
@@ -196,24 +207,27 @@ const CampaignDetails = () => {
     ownerId && currUser?._id && String(currUser._id) === String(ownerId);
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
       <CampaignDetailsNavbar />
-      <div className="max-w-8xl bg-slate-900 mx-auto px-3 py-4 flex flex-col md:flex-row gap-8 items-start">
-        {/* Left: Campaign Story and Info */}
-        <div className="flex-1 min-w-0 md:max-w-[900px] ml-10">
-          {/* ---Category badge row--- */}
-          <div className="flex items-center gap-2 mb-2">
-            <span className="px-2 py-0.5 bg-blue-700 text-white rounded-lg text-xs font-semibold">
-              Startup
+      <div className="flex-grow max-w-7xl w-full mx-auto px-6 py-12 flex flex-col lg:flex-row gap-12 items-start">
+        {/* Left Column: Image, Story, Creator Info */}
+        <main className="flex-1 min-w-0 w-full">
+          {/* Category Tag */}
+          <div className="flex items-center gap-2 mb-3">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider bg-indigo-500/5 text-indigo-600 dark:text-indigo-400 border border-indigo-500/10 uppercase">
+              {category || "Campaign"}
             </span>
           </div>
-          <h1 className="text-2xl md:text-3xl font-extrabold mb-1 text-blue-900 dark:text-green-200">
+
+          <h1 className="text-3xl sm:text-4xl font-black text-slate-950 dark:text-white tracking-tighter mb-4 leading-tight">
             {title}
           </h1>
-          <div className="flex items-center gap-4 mt-4 mb-6 text-gray-500 dark:text-gray-300 text-sm">
+
+          {/* Owner details */}
+          <div className="flex items-center gap-4 mb-8 text-slate-500 dark:text-slate-400 text-sm">
             <span className="flex items-center gap-2">
               <span
-                className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-white text-base shadow"
+                className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-white text-xs shadow-sm"
                 style={{
                   background: stringToColor(createdBy?.name || "Unknown"),
                   minWidth: "1.75rem",
@@ -221,97 +235,101 @@ const CampaignDetails = () => {
               >
                 {(createdBy?.name?.[0] || "U").toUpperCase()}
               </span>
-              <span className="text-gray-400 font-medium">by</span>
-              <span className="text-blue-700 dark:text-blue-200 font-medium">
+              <span className="text-slate-400 font-medium">by</span>
+              <span className="text-slate-900 dark:text-slate-200 font-semibold">
                 {createdBy?.name || "Unknown"}
               </span>
             </span>
-            <span className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" /> {daysLeft(deadline)}
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-200 dark:bg-slate-800" />
+            <span className="flex items-center gap-1.5 font-mono text-xs text-slate-400">
+              <Calendar className="w-3.5 h-3.5" />
+              {daysLeft(deadline)}
             </span>
           </div>
+
+          {/* Campaign Cover Image */}
           {image && (
             <img
               src={image}
               alt={title}
-              className="w-full max-h-80 object-cover rounded-xl border border-blue-100 dark:border-slate-800 mb-3 shadow-md"
+              width={900}
+              height={320}
+              className="w-full max-h-[360px] object-cover rounded-2xl border border-slate-200 dark:border-white/5 mb-8 shadow-sm"
             />
           )}
-          <div className="flex w-full mt-7 max-w-xs mx-auto mb-7 rounded-xl overflow-hidden bg-gradient-to-r from-slate-100 via-blue-50 to-blue-200 dark:from-slate-900 dark:via-blue-900 dark:to-blue-950 border border-blue-200 dark:border-slate-800 shadow font-semibold">
+
+          {/* Minimal tab bar */}
+          <div className="flex w-full max-w-sm mb-6 border-b border-slate-200 dark:border-white/5">
             <button
               onClick={() => setTab("story")}
-              className={`flex-1 py-2 text-center text-base hover:cursor-pointer transition-all
+              className={`pb-3 text-sm font-bold transition-all relative cursor-pointer mr-6
                 ${
                   tab === "story"
-                    ? "bg-blue-700/90 dark:bg-green-700/60 text-white shadow font-bold"
-                    : "bg-transparent text-gray-500 dark:text-gray-400 hover:text-blue-800"
+                    ? "text-indigo-500 font-black after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-indigo-500"
+                    : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                 }`}
-              style={{
-                borderRight: "1px solid #b8cffb",
-              }}
             >
-              Story
+              Story Description
             </button>
             <button
               onClick={() => setTab("creator")}
-              className={`flex-1 py-2 text-center text-base hover:cursor-pointer transition-all
+              className={`pb-3 text-sm font-bold transition-all relative cursor-pointer
                 ${
                   tab === "creator"
-                    ? "bg-blue-700/90 dark:bg-green-700/60 text-white shadow font-bold"
-                    : "bg-transparent text-gray-500 dark:text-gray-400 hover:text-blue-800"
+                    ? "text-indigo-500 font-black after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-indigo-500"
+                    : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                 }`}
             >
-              Creator
+              Creator Information
             </button>
           </div>
-          <div className="border border-blue-100 dark:border-slate-800 rounded-xl bg-white/80 dark:bg-slate-900/80 p-6 shadow">
+
+          {/* Tab Content Box */}
+          <div className="bg-white dark:bg-slate-900/50 rounded-2xl p-8 mb-8 border border-slate-200 dark:border-white/5 shadow-sm">
             {tab === "story" && (
               <div>
-                <div className="text-base text-gray-700 dark:text-gray-200 whitespace-pre-line font-medium">
+                <p className="text-slate-700 dark:text-slate-350 text-base leading-relaxed whitespace-pre-line">
                   {description}
-                </div>
+                </p>
               </div>
             )}
             {tab === "creator" && (
               <div>
-                {/* Profile row: Avatar + Name + Bio */}
-                <div className="flex items-center gap-6 mb-2">
+                <div className="flex items-center gap-4 mb-6">
                   <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-3xl text-white shadow"
+                    className="w-14 h-14 rounded-full flex items-center justify-center font-bold text-xl text-white shadow-sm"
                     style={{
                       background: stringToColor(createdBy?.name || "Unknown"),
-                      minWidth: "4rem",
+                      minWidth: "3.5rem",
                     }}
                   >
                     {(createdBy?.name?.[0] || "U").toUpperCase()}
                   </div>
                   <div>
-                    <div className="font-bold text-2xl text-blue-900 dark:text-green-200 mb-0.5">
+                    <h4 className="font-bold text-xl text-slate-900 dark:text-white mb-0.5">
                       {createdBy?.name || "Unknown"}
-                    </div>
-                    <div className="text-gray-500 dark:text-gray-300 text-base max-w-lg">
-                      {createdBy?.bio || "No bio added by creator!!"}
-                    </div>
+                    </h4>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">
+                      {createdBy?.bio || "No biography added by the creator."}
+                    </p>
                   </div>
                 </div>
 
-                {/* Stats: Campaigns Started & Total Donated */}
-                <div className="grid grid-cols-2 gap-5 mt-6">
-                  <div className="bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-xl py-6 flex flex-col items-center justify-center shadow">
-                    <span className="text-blue-700 dark:text-green-200 font-extrabold text-3xl mb-0.5">
+                {/* Creator Stats */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="border border-slate-200 dark:border-white/5 bg-slate-50/50 dark:bg-slate-900/10 rounded-xl p-5 flex flex-col items-center">
+                    <span className="font-mono font-bold text-2xl text-slate-800 dark:text-white mb-0.5">
                       {campaignCount}
                     </span>
-                    <span className="text-gray-500 dark:text-gray-200 font-medium text-base">
-                      {campaignCount === 1
-                        ? "Campaign Started"
-                        : "Campaigns Started"}
+                    <span className="text-xs text-slate-400 font-mono font-bold uppercase tracking-wider">
+                      {campaignCount === 1 ? "Campaign Launched" : "Campaigns Launched"}
                     </span>
                   </div>
-                  <div className="bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900 dark:to-blue-800 rounded-xl py-6 flex flex-col items-center justify-center shadow">
-                    <span className="text-green-700 dark:text-green-200 font-extrabold text-3xl mb-0.5">
+                  <div className="border border-slate-200 dark:border-white/5 bg-slate-50/50 dark:bg-slate-900/10 rounded-xl p-5 flex flex-col items-center">
+                    <span className="font-mono font-bold text-2xl text-slate-800 dark:text-white mb-0.5">
                       ₹{creatorTotalDonated.toLocaleString() || "0"}
                     </span>
-                    <span className="text-gray-500 dark:text-gray-200 font-medium text-base">
+                    <span className="text-xs text-slate-400 font-mono font-bold uppercase tracking-wider">
                       Total Donated
                     </span>
                   </div>
@@ -319,6 +337,7 @@ const CampaignDetails = () => {
               </div>
             )}
           </div>
+
           <BadgeModal
             show={badgeModalVisible}
             badges={unlockedBadges}
@@ -326,47 +345,44 @@ const CampaignDetails = () => {
               resetBadgeModal();
             }}
           />
-        </div>
+        </main>
 
-        {/* Right: Stats / Donate / Withdraw */}
-        <aside className="md:w-[440px] w-full flex-shrink-0 m-4 bg-white/80 dark:bg-slate-900/80 border border-blue-200 dark:border-slate-800 rounded-2xl p-7 shadow-lg flex flex-col gap-4">
-          {/* Stats Section */}
+        {/* Right Sidebar: Statistics, Checkout form, Withdraw panel */}
+        <aside className="w-full lg:w-[380px] shrink-0 bg-white dark:bg-slate-900/50 rounded-2xl p-8 border border-slate-200 dark:border-white/5 shadow-sm flex flex-col gap-6">
+          {/* Progress Section */}
           <div>
-            <div className="flex items-start justify-between">
-              <div className="text-3xl font-extrabold text-green-500 leading-tight mb-1">
+            <div className="flex items-baseline justify-between mb-2">
+              <span className="text-3xl font-mono font-black text-slate-900 dark:text-white">
                 ₹{amountRaised?.toLocaleString() || 0}
-              </div>
-              <div className="text-xl font-semibold text-blue-900 dark:text-green-300">
+              </span>
+              <span className="text-sm font-mono font-bold text-indigo-500 dark:text-indigo-400">
                 {percent}%
-              </div>
+              </span>
             </div>
-            <div className="text-[.95rem] font-medium text-gray-500 dark:text-gray-300 mb-1">
+            <p className="text-xs text-slate-400 mb-4">
               raised of ₹{targetAmount?.toLocaleString()} goal
-            </div>
+            </p>
             <ProgressBar
               raised={amountRaised || 0}
               target={targetAmount || 1}
             />
+
             {currentCampaign.status === "open" && (
-              <div className="flex items-center justify-evenly mt-4 mb-1">
-                <div className="flex flex-col items-center">
-                  <span className="text-3xl font-bold text-blue-700 dark:text-green-300 flex items-center gap-1">
+              <div className="grid grid-cols-2 gap-4 mt-6 border-t border-slate-100 dark:border-slate-800/40 pt-4 text-center">
+                <div>
+                  <span className="font-mono font-bold text-lg text-slate-800 dark:text-slate-200 block leading-none mb-1">
                     {donors.length}
                   </span>
-                  <span className="text-base text-gray-500 dark:text-gray-300 font-medium">
-                    backers
-                  </span>
+                  <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">backers</span>
                 </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-3xl font-bold text-green-500 flex items-center gap-1">
+                <div>
+                  <span className="font-mono font-bold text-lg text-slate-800 dark:text-slate-200 block leading-none mb-1">
                     {Math.max(
                       0,
                       Math.ceil((new Date(deadline) - new Date()) / 86400000),
                     )}
                   </span>
-                  <span className="text-base text-gray-500 dark:text-gray-300 font-medium">
-                    days to go
-                  </span>
+                  <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">days to go</span>
                 </div>
               </div>
             )}
@@ -374,139 +390,118 @@ const CampaignDetails = () => {
 
           {(currentCampaign.status === "fulfilled" ||
             currentCampaign.status === "closed") && (
-            <div className="w-full mb-3 rounded bg-green-600/90 text-center text-white text-lg font-bold py-3 shadow">
-              Campaign{" "}
-              {currentCampaign.status === "fulfilled"
-                ? "Goal Reached!"
-                : "Closed"}
+            <div className="w-full rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center text-emerald-600 dark:text-emerald-400 text-xs font-mono font-bold py-3 uppercase tracking-wider">
+              {currentCampaign.status === "fulfilled" ? "✓ Goal Reached" : "Closed"}
             </div>
           )}
 
           {isCampaignEnded ? (
-            <>
+            <div className="text-center">
               <button
-                className="w-full py-3 mt-1 rounded-xl font-semibold text-white text-lg bg-gray-500 cursor-not-allowed"
+                className="w-full py-3 rounded-xl font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-sm cursor-not-allowed uppercase tracking-wider"
                 disabled
                 type="button"
               >
-                Campaign ended on {new Date(deadline).toLocaleDateString()}
+                Campaign Ended
               </button>
-
-              {/* Optional: Overlay feel */}
-              <div className="text-center text-sm text-gray-400 mt-2">
-                Donations are no longer accepted
-              </div>
-            </>
+              <p className="text-[10px] text-slate-400 mt-2 font-mono">
+                This campaign closed on {new Date(deadline).toLocaleDateString()}
+              </p>
+            </div>
           ) : (
-            <>
+            <div className="flex flex-col gap-4">
               {isOwner ? (
-                <>
+                <div className="flex flex-col gap-2">
+                  <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest block">Owner Withdraw Panel</span>
                   <input
                     type="number"
-                    placeholder={`Enter amount (Max: ₹${amountAvailable})`}
+                    placeholder={`Withdraw Amount (Max: ₹${amountAvailable})`}
                     value={amount}
                     min={1}
                     max={amountAvailable}
                     onChange={(e) => setAmount(e.target.value)}
-                    className={`flex-1 px-3 py-2 text-base rounded-xl bg-blue-100/80 dark:bg-slate-900 text-blue-900 dark:text-white border border-blue-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-green-300 mb-2 shadow`}
+                    className="w-full px-4 py-2 text-sm rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white outline-none focus:border-indigo-500 transition shadow-sm mb-1"
                   />
                   <button
                     onClick={handleWithdraw}
                     disabled={withdrawLoading}
-                    className={`w-full py-3 hover:cursor-pointer rounded-xl font-semibold text-white text-lg bg-gradient-to-r from-red-500 via-orange-400 to-yellow-500 hover:from-pink-500 hover:to-yellow-400 shadow tracking-wide transition-all ${
-                      withdrawLoading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                    className="w-full py-3 rounded-xl font-bold text-white text-sm bg-rose-600 hover:bg-rose-700 transition duration-200 shadow cursor-pointer flex justify-center items-center"
                     type="button"
                   >
                     {withdrawLoading ? (
                       <span className="flex items-center justify-center gap-2">
-                        <LoaderCircleIcon className="w-5 h-5 animate-spin" />
+                        <LoaderCircleIcon className="w-4 h-4 animate-spin" />
                         Processing...
                       </span>
                     ) : (
-                      "Withdraw"
+                      "Withdraw Funds"
                     )}
                   </button>
-                </>
+                </div>
               ) : (
-                <>
-                  <div className="flex gap-2 mt-4 mb-2">
+                <div className="flex flex-col gap-3">
+                  {/* Preset donation amounts */}
+                  <div className="flex gap-2">
                     {[100, 500, 1000].map((amt) => (
                       <button
                         key={amt}
                         onClick={() => !isCampaignEnded && setAmount(amt)}
                         disabled={isCampaignEnded}
-                        className={`flex-1 py-1 text-md font-bold rounded-xl 
-    bg-blue-100/70 dark:bg-slate-900 text-blue-900 dark:text-white 
-    border border-blue-200 dark:border-slate-700 shadow transition
-    ${
-      isCampaignEnded
-        ? "opacity-50 cursor-not-allowed"
-        : "hover:bg-blue-200 dark:hover:bg-slate-800"
-    }`}
+                        className="flex-1 py-1.5 text-xs font-mono font-bold rounded-lg border border-slate-200 dark:border-white/10 hover:border-indigo-500 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 transition-colors shadow-sm cursor-pointer"
                         type="button"
                       >
                         ₹{amt}
                       </button>
                     ))}
                   </div>
+
+                  {/* Manual donation input */}
                   <input
                     type="number"
-                    placeholder={
-                      isCampaignEnded ? "Campaign Ended" : "Enter amount"
-                    }
+                    placeholder="Enter Custom Donation Amount"
                     value={amount}
                     min={1}
                     disabled={isCampaignEnded}
                     onChange={(e) => setAmount(e.target.value)}
-                    className={`flex-1 px-3 py-2 text-base rounded-xl 
-    bg-blue-100/70 dark:bg-slate-900 text-blue-900 dark:text-white 
-    border border-blue-200 dark:border-slate-700 outline-none shadow
-    ${
-      isCampaignEnded
-        ? "opacity-50 cursor-not-allowed"
-        : "focus:ring-2 focus:ring-green-300"
-    }`}
+                    className="w-full px-4 py-2 text-sm rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white outline-none focus:border-indigo-500 transition shadow-sm"
                   />
+
+                  {/* Back campaign CTA */}
                   <button
                     onClick={handleDonate}
                     disabled={donationLoading || isCampaignEnded}
-                    className={`w-full py-3 mt-1 rounded-xl font-semibold text-white text-lg bg-gradient-to-r from-green-400 via-blue-400 to-blue-700 hover:from-green-500 hover:to-blue-800 shadow tracking-wide transition-all ${
-                      donationLoading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                    className="w-full py-3 rounded-xl font-bold text-white text-sm bg-indigo-600 hover:bg-indigo-700 transition duration-200 shadow shadow-indigo-600/10 cursor-pointer flex justify-center items-center gap-1.5"
                     type="button"
                   >
-                    <span className="flex items-center justify-center gap-2">
-                      {donationLoading ? (
-                        <LoaderCircleIcon className="w-5 h-5 animate-spin" />
-                      ) : (
-                        <Gift className="w-5 h-5" />
-                      )}
-                      {donationLoading ? "Processing..." : "Back This Campaign"}
-                    </span>
+                    {donationLoading ? (
+                      <LoaderCircleIcon className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Gift className="w-4 h-4" />
+                    )}
+                    {donationLoading ? "Processing..." : "Back This Campaign"}
                   </button>
-                </>
+                </div>
               )}
-            </>
+            </div>
           )}
 
-          {/* Rewards Section */}
-          <div className="rounded-xl bg-gradient-to-r from-blue-50/40 via-blue-100/50 to-green-50/50 dark:from-slate-900/80 dark:via-blue-900/80 dark:to-green-900/80 border border-blue-100 dark:border-slate-800 p-4 mt-2">
+          {/* Backer Rewards Info */}
+          <div className="rounded-xl border border-slate-200/60 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/10 p-4">
             <div className="flex items-center gap-2 mb-2">
-              <Zap className="w-5 h-5 text-yellow-400" />
-              <span className="font-bold text-green-700 dark:text-yellow-200 text-base">
+              <Zap className="w-4 h-4 text-indigo-500" />
+              <span className="font-bold text-slate-800 dark:text-slate-200 text-xs">
                 Backer Rewards
               </span>
             </div>
-            <div className="text-blue-900 dark:text-green-100 text-[0.98rem] mb-2">
+            <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed mb-3">
               Earn XP and unlock achievements by backing this project!
-            </div>
-            <div className="flex items-center gap-4 text-yellow-500 text-base">
+            </p>
+            <div className="flex items-center gap-4 text-slate-600 dark:text-slate-400 text-[10px] font-mono font-bold">
               <span className="flex items-center gap-1">
-                <Trophy className="w-5 h-5" /> +50 XP
+                <Trophy className="w-3.5 h-3.5 text-amber-500" /> +50 XP
               </span>
               <span className="flex items-center gap-1">
-                <Star className="w-5 h-5 text-blue-200" /> Supporter Badge
+                <Star className="w-3.5 h-3.5 text-indigo-400" /> Supporter Badge
               </span>
             </div>
           </div>
@@ -524,7 +519,7 @@ const CampaignDetails = () => {
         onClose={handleCloseWithdrawSuccess}
       />
       <MinimalFooter />
-    </>
+    </div>
   );
 };
 

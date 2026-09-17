@@ -26,8 +26,10 @@ const campaignSchema = new mongoose.Schema(
     },
     donors: [
       {
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
         amount: { type: Number, required: true },
+        name: { type: String, default: "" },
+        email: { type: String, default: "" },
         donatedAt: { type: Date, default: Date.now },
       },
     ],

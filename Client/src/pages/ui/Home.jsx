@@ -8,11 +8,10 @@ import ReviewsSection from "../../components/home/ReviewsSection";
 import Footer from "../../components/footer/Footer";
 import HomeNavbar from "../../components/navbar/HomeNavbar";
 
-const API_URL = import.meta.env.VITE_API_URL; // Must match backend setup
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Home = () => {
   const [stats, setStats] = useState([
-    // fallback initial loading state
     {
       label: "Total Raised",
       value: 0,
@@ -43,18 +42,18 @@ const Home = () => {
         setStats([
           {
             label: "Total Raised",
-            value: data.totalRaised,
+            value: data.totalRaised || 0,
             prefix: "₹",
             suffix: "+",
           },
           {
             label: "Active Users",
-            value: data.userCount,
+            value: data.userCount || 0,
             suffix: "+",
           },
           {
             label: "Campaigns Funded",
-            value: data.campaignCount,
+            value: data.campaignCount || 0,
             suffix: "+",
           },
           {
@@ -63,22 +62,24 @@ const Home = () => {
             suffix: " min",
           },
         ]);
-      });
+      })
+      .catch((err) => console.error("Error loading homepage stats:", err));
   }, []);
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
       <HomeNavbar />
-      <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-blue-100 via-green-100 to-white dark:from-slate-900 dark:via-blue-950 dark:to-green-950 transition-colors">
+      <main className="flex-grow">
         <HomeHero />
         <StatsBar stats={stats} />
         <StepsSection />
         <WhyChooseUs />
         <FAQSection />
         <ReviewsSection />
-        <Footer />
-      </div>
-    </>
+      </main>
+      <Footer />
+    </div>
   );
 };
+
 export default Home;

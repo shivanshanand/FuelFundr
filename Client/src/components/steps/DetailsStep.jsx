@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Upload, AlertCircle } from "lucide-react";
+import { Upload, AlertCircle, Sparkles } from "lucide-react";
 import { toast } from "react-toastify";
 
 const DetailsStep = ({
@@ -12,6 +12,26 @@ const DetailsStep = ({
   const [aiLoading, setAiLoading] = useState(false);
   const [tone, setTone] = useState("Inspiring");
   const [length, setLength] = useState("medium");
+  const [previewUrl, setPreviewUrl] = useState(null);
+
+  // Manage image preview URL creation and cleanup
+  useEffect(() => {
+    if (!campaignData.image) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    if (campaignData.image instanceof File || campaignData.image instanceof Blob) {
+      const objectUrl = URL.createObjectURL(campaignData.image);
+      setPreviewUrl(objectUrl);
+
+      return () => {
+        URL.revokeObjectURL(objectUrl);
+      };
+    } else if (typeof campaignData.image === "string") {
+      setPreviewUrl(campaignData.image);
+    }
+  }, [campaignData.image]);
 
   // Validation
   const validateDetails = (data) => {
@@ -111,27 +131,27 @@ const DetailsStep = ({
   const showError = (field) => touched[field] && errors[field];
 
   const ErrorMessage = ({ message }) => (
-    <div className="flex items-center mt-2 text-red-500 text-sm">
-      <AlertCircle className="w-4 h-4 mr-1" />
+    <div className="flex items-center mt-2 text-rose-500 text-xs font-semibold">
+      <AlertCircle className="w-3.5 h-3.5 mr-1" />
       {message}
     </div>
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 select-none">
       <div>
-        <h2 className="text-2xl font-extrabold bg-gradient-to-r from-blue-700 to-green-400 bg-clip-text text-transparent mb-2">
+        <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-1">
           Campaign Details
         </h2>
-        <p className="text-gray-600 dark:text-gray-300">
-          Add detailed information and media
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          Add detailed description information and cover media
         </p>
       </div>
 
       {/* Description Field */}
-      <div>
-        <label className="block text-blue-900 dark:text-green-200 font-semibold mb-3">
-          Campaign Description <span className="text-red-400">*</span>
+      <div className="flex flex-col gap-2">
+        <label className="text-xs font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+          Campaign Description <span className="text-rose-500">*</span>
         </label>
 
         <textarea
@@ -139,21 +159,20 @@ const DetailsStep = ({
           value={campaignData.description}
           onChange={(e) => handleInputChange("description", e.target.value)}
           onBlur={() => handleBlur("description")}
-          rows={8}
+          rows={7}
           className={`
-            w-full px-4 py-3 rounded-xl shadow bg-white/80 dark:bg-slate-900/80
-            text-blue-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
-            border-2 transition-all duration-200 text-base resize-none
+            w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-950
+            text-slate-900 dark:text-white placeholder-slate-450 dark:placeholder-slate-650
+            border outline-none transition duration-150 text-sm resize-none
             ${
               showError("description")
-                ? "border-red-500 focus:ring-2 focus:ring-red-400"
-                : "border-blue-200 dark:border-slate-700 focus:ring-2 focus:ring-green-300"
+                ? "border-rose-500 focus:ring-1 focus:ring-rose-500"
+                : "border-slate-200 dark:border-white/10 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
             }
-            focus:outline-none
           `}
         />
 
-        <div className="flex flex-col sm:flex-row justify-between items-center mt-2 gap-2 sm:gap-0">
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-1 gap-2">
           <div>
             {showError("description") && (
               <ErrorMessage message={errors.description} />
@@ -161,77 +180,76 @@ const DetailsStep = ({
           </div>
 
           <div
-            className={`text-sm ${
+            className={`text-xs font-mono ${
               campaignData.description.length < 50
-                ? "text-red-400"
-                : campaignData.description.length < 100
-                  ? "text-yellow-500"
-                  : "text-gray-400 dark:text-gray-300"
+                ? "text-rose-500"
+                : "text-slate-450 dark:text-slate-500"
             }`}
           >
             {campaignData.description.length} characters
           </div>
         </div>
 
-        <div className="flex gap-4 mt-3">
-          {/* Tone */}
-          <select
-            value={tone}
-            onChange={(e) => setTone(e.target.value)}
-            className="px-3 py-2 rounded-lg border"
-          >
-            <option>Inspiring</option>
-            <option>Professional</option>
-            <option>Casual and friendly</option>
-            <option>Urgency-driven</option>
-            <option>Storytelling</option>
-          </select>
+        {/* AI Rewrite Options */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mt-3 p-4 rounded-xl border border-slate-200/60 dark:border-white/5 bg-slate-50/50 dark:bg-slate-950/20">
+          <div className="flex items-center gap-3">
+            <select
+              value={tone}
+              onChange={(e) => setTone(e.target.value)}
+              className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 outline-none cursor-pointer"
+            >
+              <option>Inspiring</option>
+              <option>Professional</option>
+              <option>Casual and friendly</option>
+              <option>Urgency-driven</option>
+              <option>Storytelling</option>
+            </select>
 
-          {/* Length */}
-          <select
-            value={length}
-            onChange={(e) => setLength(e.target.value)}
-            className="px-3 py-2 rounded-lg border"
-          >
-            <option value="short">Short</option>
-            <option value="medium">Medium</option>
-            <option value="long">Long</option>
-          </select>
-        </div>
+            <select
+              value={length}
+              onChange={(e) => setLength(e.target.value)}
+              className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 outline-none cursor-pointer"
+            >
+              <option value="short">Short Length</option>
+              <option value="medium">Medium Length</option>
+              <option value="long">Long Length</option>
+            </select>
+          </div>
 
-        <div className="flex justify-end mt-2">
           <button
             type="button"
             onClick={handleRewrite}
             disabled={aiLoading}
-            className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow hover:opacity-90 disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition shadow-sm cursor-pointer"
           >
-            {aiLoading ? "Rewriting..." : "✨ Rewrite with AI"}
+            <Sparkles className="w-3.5 h-3.5" />
+            {aiLoading ? "Generating..." : "AI Rewrite"}
           </button>
         </div>
       </div>
 
       {/* Image Upload */}
-      <div>
-        <label className="block text-blue-900 dark:text-green-200 font-semibold mb-3">
-          Campaign Image <span className="text-red-400">*</span>
+      <div className="flex flex-col gap-2">
+        <label className="text-xs font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+          Campaign Image <span className="text-rose-500">*</span>
         </label>
+        
         <div
           className={`
-            border-2 border-dashed rounded-xl p-5 sm:p-8 text-center transition-colors duration-200 shadow bg-white/80 dark:bg-slate-900/70
+            border border-dashed rounded-xl p-8 text-center transition-colors duration-200 bg-slate-50/50 dark:bg-slate-950/20
             ${
               showError("image")
-                ? "border-red-500"
-                : "border-blue-200 dark:border-slate-700"
+                ? "border-rose-500"
+                : "border-slate-200 dark:border-white/5 hover:border-indigo-500"
             }
           `}
         >
-          <Upload className="w-10 h-10 sm:w-12 sm:h-12 text-blue-400 dark:text-green-300 mx-auto mb-4" />
-          <h3 className="text-blue-900 dark:text-green-200 font-semibold mb-2 text-base sm:text-lg">
-            Upload your campaign image
+          <Upload className="w-8 h-8 text-slate-400 mx-auto mb-3 animate-bounce-custom" />
+          <h3 className="text-slate-800 dark:text-slate-200 font-bold mb-1 text-sm sm:text-base">
+            Upload campaign cover photo
           </h3>
-          <p className="text-gray-500 dark:text-gray-300 text-sm mb-4">
-            PNG, JPG, WebP up to 10MB
+          <p className="text-slate-400 dark:text-slate-500 text-xs mb-4">
+            PNG, JPG or WebP up to 10MB
           </p>
           <input
             type="file"
@@ -242,18 +260,21 @@ const DetailsStep = ({
           />
           <label
             htmlFor="file-upload"
-            className="inline-block px-4 py-2 bg-gradient-to-r from-blue-700 to-green-400 text-white rounded-lg cursor-pointer font-semibold hover:bg-blue-800 transition-colors duration-200"
+            className="inline-block px-3.5 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 rounded-lg cursor-pointer hover:border-indigo-500 bg-white dark:bg-slate-900 transition-all duration-200 shadow-sm"
           >
             Choose File
           </label>
+          
           {campaignData.image && (
-            <div className="mt-4">
-              <p className="text-green-500 text-sm">
-                ✓ File selected: {campaignData.image.name}
+            <div className="mt-4 border-t border-slate-100 dark:border-slate-850 pt-3">
+              <p className="text-emerald-500 text-xs font-semibold">
+                ✓ File selected: {campaignData.image.name || "Custom Uploaded Cover"}
               </p>
-              <p className="text-gray-400 dark:text-gray-300 text-xs">
-                Size: {(campaignData.image.size / 1024 / 1024).toFixed(2)} MB
-              </p>
+              {campaignData.image.size && (
+                <p className="text-slate-400 dark:text-slate-500 text-[10px] font-mono mt-0.5">
+                  Size: {(campaignData.image.size / 1024 / 1024).toFixed(2)} MB
+                </p>
+              )}
             </div>
           )}
         </div>
@@ -261,16 +282,16 @@ const DetailsStep = ({
       </div>
 
       {/* Image Preview */}
-      {campaignData.image && (
-        <div>
-          <label className="block text-blue-900 dark:text-green-200 font-semibold mb-3">
-            Image Preview
+      {previewUrl && (
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+            Cover Photo Preview
           </label>
-          <div className="bg-white/85 dark:bg-slate-900/85 rounded-xl p-4 border border-blue-200 dark:border-slate-700 shadow">
+          <div className="bg-white dark:bg-slate-900/50 rounded-xl p-3 border border-slate-200 dark:border-white/5 shadow-sm">
             <img
-              src={URL.createObjectURL(campaignData.image)}
-              alt="Campaign preview"
-              className="w-full max-h-[15rem] object-cover rounded-lg"
+              src={previewUrl}
+              alt="Campaign cover preview"
+              className="w-full max-h-[160px] object-cover rounded-lg"
             />
           </div>
         </div>

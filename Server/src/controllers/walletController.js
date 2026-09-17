@@ -1,8 +1,8 @@
 import User from "../models/User.js";
-import crypto from "crypto";
 import Payment from "../models/Payment.js";
 import WalletTransaction from "../models/WalletTransaction.js";
 import mongoose from "mongoose";
+import { verifyPaymentDirect } from "../utils/paymentVerifier.js";
 
 // Get Wallet Balance
 export const getWalletBalance = async (req, res) => {
@@ -52,10 +52,21 @@ export const addFundsToWallet = async (req, res) => {
       });
     }
 
-    const user = await User.findById(req.userId);
+    // Atomically increment user's balance
+    const user = await User.findOneAndUpdate(
+      { _id: req.userId },
+      { $inc: { walletBalance: amount } },
+      { new: true }
+    );
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    user.walletBalance += amount;
+    // If payment was already verified and processed, do not create duplicate transactions or double-credit
+    if (paymentResult.alreadyProcessed) {
+      return res.json({
+        message: "Funds added successfully (already processed)",
+        walletBalance: user.walletBalance,
+      });
+    }
 
     await WalletTransaction.create({
       userId: req.userId,
@@ -63,8 +74,6 @@ export const addFundsToWallet = async (req, res) => {
       amount,
       description: "Funds added via Razorpay",
     });
-
-    await user.save();
 
     res.json({
       message: "Funds added successfully",
@@ -85,14 +94,16 @@ export const withdrawFundsFromWallet = async (req, res) => {
       return res.status(400).json({ message: "Invalid amount" });
     }
 
-    const user = await User.findById(req.userId);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    // Atomically deduct balance only if user has sufficient funds (prevents race condition)
+    const user = await User.findOneAndUpdate(
+      { _id: req.userId, walletBalance: { $gte: amount } },
+      { $inc: { walletBalance: -amount } },
+      { new: true }
+    );
 
-    if (user.walletBalance < amount) {
-      return res.status(400).json({ message: "Insufficient wallet balance" });
+    if (!user) {
+      return res.status(400).json({ message: "Insufficient wallet balance or user not found" });
     }
-
-    user.walletBalance -= amount;
 
     await WalletTransaction.create({
       userId: req.userId,
@@ -100,8 +111,6 @@ export const withdrawFundsFromWallet = async (req, res) => {
       amount,
       description: "Wallet withdrawal",
     });
-
-    await user.save();
 
     res.json({
       message: "Funds withdrawn successfully",
@@ -112,50 +121,6 @@ export const withdrawFundsFromWallet = async (req, res) => {
     res.status(500).json({ message: "Error withdrawing funds" });
   }
 };
-
-// Razorpay Signature Verification (reusable logic)
-async function verifyPaymentDirect({
-  razorpay_order_id,
-  razorpay_payment_id,
-  razorpay_signature,
-  amount,
-  userId,
-}) {
-  try {
-    if (
-      !razorpay_order_id ||
-      !razorpay_payment_id ||
-      !razorpay_signature ||
-      !amount
-    ) {
-      return { success: false, message: "Missing payment details" };
-    }
-
-    const body = razorpay_order_id + "|" + razorpay_payment_id;
-
-    const expectedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-      .update(body)
-      .digest("hex");
-
-    if (expectedSignature === razorpay_signature) {
-      await Payment.create({
-        user: userId,
-        razorpay_order_id,
-        razorpay_payment_id,
-        razorpay_signature,
-        amount,
-        status: "SUCCESS",
-      });
-      return { success: true };
-    } else {
-      return { success: false, message: "Invalid signature" };
-    }
-  } catch (err) {
-    console.error("Error verifying payment:", err);
-    return { success: false, message: "Payment verification failed" };
-  }
-}
 
 export const getWalletTransactions = async (req, res) => {
   try {
@@ -169,12 +134,17 @@ export const getWalletTransactions = async (req, res) => {
   }
 };
 
-// GET /api/wallet/total-donated  (or any route you want)
+// GET /api/wallet/total-donated
 export const getTotalDonatedByUser = async (req, res) => {
   try {
     // Accept either a provided userId, or default to logged-in user.
     const userId = req.query.userId || req.userId;
     if (!userId) return res.status(400).json({ message: "userId is required" });
+
+    // Validate ObjectId format to prevent database aggregation errors
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid userId format" });
+    }
 
     const result = await WalletTransaction.aggregate([
       {

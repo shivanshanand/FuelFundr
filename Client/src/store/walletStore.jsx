@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+import { loadRazorpay } from "../utils/loadRazorpay";
 
 const WALLET_API = import.meta.env.VITE_API_URL;
 
@@ -42,7 +43,8 @@ export const useWalletStore = create((set) => ({
         { withCredentials: true }
       );
 
-      // 2. Return a promise that resolves/rejects on Razorpay events
+      // 2. Load Razorpay SDK on demand, then open checkout
+      await loadRazorpay();
       await new Promise((resolve, reject) => {
         const razorpay = new window.Razorpay({
           key: import.meta.env.VITE_RAZORPAY_KEY_ID,

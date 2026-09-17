@@ -19,31 +19,24 @@ const CampaignDetailsNavbar = () => {
 
   return (
     <nav
-      className="w-full sticky top-0 z-40
-      bg-gradient-to-r from-slate-900/90 via-blue-900/80 to-green-900/80
-      dark:from-slate-950 dark:to-blue-900/90
-      border-b border-blue-600/30 dark:border-green-900/40
-      shadow-lg flex flex-row items-center justify-between
-      px-2 sm:px-4 md:px-8 py-2.5 sm:py-3 backdrop-blur transition-colors"
+      className="w-full sticky top-0 z-40 bg-white/75 dark:bg-slate-950/75 border-b border-slate-200/50 dark:border-white/5 shadow-sm flex flex-row items-center justify-between px-6 py-3.5 backdrop-blur-md transition-colors duration-200"
     >
       {/* Left: Back to Campaigns */}
       <button
         onClick={() => navigate("/campaigns")}
-        className="flex items-center gap-2 text-blue-100 dark:text-green-300 font-bold hover:text-green-300 transition text-base px-2 py-1 rounded-lg hover:bg-blue-800/30 dark:hover:bg-green-600/10"
+        className="flex items-center gap-2 text-slate-700 dark:text-slate-200 font-semibold hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors duration-150 text-sm px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer"
       >
-        <ArrowLeft className="w-5 h-5" />
-        <span className="hidden xs:inline md:inline-block">Back</span>
+        <ArrowLeft className="w-4 h-4" />
+        <span>Back to Campaigns</span>
       </button>
 
       {/* Right: Share */}
       <button
         onClick={handleShare}
-        className="flex items-center gap-1 px-4 py-2 border border-blue-300 dark:border-green-700 rounded-xl
-          bg-gradient-to-r from-blue-900 via-green-800 to-blue-800 dark:from-blue-800 dark:to-green-900 text-white font-semibold text-base
-          hover:bg-green-700/80 hover:border-green-400 hover:text-green-200 dark:hover:bg-green-900 transition shadow"
+        className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 dark:border-white/10 rounded-lg bg-white/50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-900 text-slate-700 dark:text-slate-200 font-semibold text-sm hover:border-indigo-500 dark:hover:border-indigo-500 transition-all duration-200 shadow-sm cursor-pointer"
       >
-        <Share2 className="w-5 h-5" />
-        <span className="hidden sm:inline font-medium">Share</span>
+        <Share2 className="w-4 h-4 text-slate-400" />
+        <span>Share</span>
       </button>
     </nav>
   );

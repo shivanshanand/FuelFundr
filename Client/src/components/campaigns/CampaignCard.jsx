@@ -1,18 +1,18 @@
 import { Link } from "react-router-dom";
-import { Calendar, Rocket, Code, Heart, Lightbulb, Users } from "lucide-react";
+import { Calendar, Rocket, Code, Heart, Lightbulb, Users, Check } from "lucide-react";
 import ProgressBar from "../ui/ProgressBar";
 
 const categoryStyle = {
-  Startup: { color: "bg-blue-700/90", icon: Rocket, label: "Startup" },
-  Hackathon: { color: "bg-green-500/90", icon: Code, label: "Hackathon" },
-  Project: { color: "bg-purple-600/90", icon: Lightbulb, label: "Project" },
+  Startup: { color: "text-indigo-500 bg-indigo-500/5 border-indigo-500/10", icon: Rocket, label: "Startup" },
+  Hackathon: { color: "text-emerald-500 bg-emerald-500/5 border-emerald-500/10", icon: Code, label: "Hackathon" },
+  Project: { color: "text-amber-500 bg-amber-500/5 border-amber-500/10", icon: Lightbulb, label: "Project" },
   "Social Cause": {
-    color: "bg-red-600/80",
+    color: "text-rose-500 bg-rose-500/5 border-rose-500/10",
     icon: Heart,
     label: "Social Cause",
   },
   Creative: {
-    color: "bg-yellow-400 text-black/90",
+    color: "text-cyan-500 bg-cyan-500/5 border-cyan-500/10",
     icon: Users,
     label: "Creative",
   },
@@ -37,119 +37,99 @@ const CampaignCard = ({ c }) => {
     : 0;
 
   return (
-    <div
-      className={`
-        rounded-2xl bg-white/90 dark:bg-slate-900/80 border border-blue-200 dark:border-slate-800 
-        shadow-lg flex flex-col relative overflow-hidden
-        transition hover:-translate-y-1 hover:shadow-2xl duration-200 min-h-[460px]
-      `}
-    >
+    <div className="yc-card yc-card-hover flex flex-col relative overflow-hidden min-h-[470px]">
       {/* Status badge */}
       {c.status === "fulfilled" && (
-        <div className="absolute top-4 right-4 bg-green-500 text-white text-xs px-3 py-1 rounded font-bold shadow-lg z-10">
-          Goal Reached
+        <div className="absolute top-4 right-4 bg-emerald-500 text-white text-[10px] font-mono font-bold px-2 py-1 rounded shadow-sm z-10 flex items-center gap-1">
+          <Check className="w-3 h-3" /> GOAL REACHED
         </div>
       )}
       {c.status === "closed" && (
-        <div className="absolute top-4 right-4 bg-gray-500 text-white text-xs px-3 py-1 rounded font-bold shadow-lg z-10">
-          Closed
+        <div className="absolute top-4 right-4 bg-slate-500 text-white text-[10px] font-mono font-bold px-2 py-1 rounded shadow-sm z-10">
+          CLOSED
         </div>
       )}
 
-      {/* Image */}
+      {/* Campaign Image */}
       <img
         src={c.image || defaultImage}
         alt={c.title}
-        className="w-full h-40 object-cover object-center rounded-t-2xl bg-gradient-to-br from-blue-100 to-blue-300 dark:from-slate-800 dark:to-blue-950"
+        width={400}
+        height={160}
+        className="w-full h-40 object-cover object-center bg-slate-100 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800/40"
         loading="lazy"
       />
 
       {/* Content */}
-      <div className="flex-1 flex flex-col px-6 pt-5 pb-6 space-y-2">
+      <div className="flex-1 flex flex-col px-6 pt-5 pb-6">
         {/* Category + Deadline */}
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-4">
           <span
             className={`
-              flex items-center gap-2 px-3 py-1 text-xs rounded-full font-semibold shadow-sm
-              ${cat.color || "bg-gray-400 text-white"}
+              flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full font-semibold border
+              ${cat.color || "text-slate-500 bg-slate-500/5 border-slate-500/10"}
             `}
           >
-            <Icon className="w-4 h-4" />
+            <Icon className="w-3.5 h-3.5" />
             {cat.label || c.category}
           </span>
-          <span className="flex items-center px-2 py-1 rounded-full bg-gradient-to-r from-green-300 to-blue-200 dark:from-blue-900 dark:to-green-800 text-blue-900 dark:text-green-200 text-xs font-medium shadow-sm">
-            <Calendar className="w-3 h-3 mr-1" />
+          <span className="flex items-center px-2 py-1 rounded-full border border-slate-200/50 dark:border-white/5 bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 text-[10px] font-mono shadow-sm">
+            <Calendar className="w-3 h-3 mr-1 text-slate-400" />
             {daysLeft(c.deadline)}
           </span>
         </div>
 
-        {/* Owner Row */}
-        <div className="mb-2 text-xs text-gray-500 dark:text-gray-300 font-medium">
-          Owner:{" "}
-          <span className="text-blue-700 dark:text-blue-200 font-semibold">
-            {c.createdBy?.name || "Unknown"}
-          </span>
+        {/* Creator Name */}
+        <div className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">
+          CREATED BY <span className="font-bold text-slate-700 dark:text-slate-300">{c.createdBy?.name || "Unknown"}</span>
         </div>
 
         {/* Title */}
-        <div className="text-lg font-bold text-blue-900 dark:text-green-200 truncate mb-0.5">
+        <h4 className="text-lg font-black text-slate-950 dark:text-white tracking-tight mb-4 truncate">
           {c.title}
-        </div>
+        </h4>
 
-        {/* Progress Row */}
-        <div className="mb-2 pt-2 border-t border-dashed border-blue-100 dark:border-slate-800">
-          <div className="flex justify-between items-center text-sm font-semibold mb-1 mt-1">
-            <span className="text-green-700 dark:text-green-300">
+        {/* Progress details */}
+        <div className="mb-4 pt-4 border-t border-dashed border-slate-100 dark:border-slate-800">
+          <div className="flex justify-between items-center text-xs font-mono font-bold mb-1.5">
+            <span className="text-slate-700 dark:text-slate-300">
               ₹{(c.amountRaised || 0).toLocaleString()} raised
             </span>
-            <span className="text-blue-700 dark:text-green-400">
+            <span className="text-indigo-500 dark:text-indigo-400">
               {percent}%
             </span>
           </div>
           <ProgressBar raised={c.amountRaised} target={c.targetAmount} />
         </div>
 
-        {/* Stats Row */}
-        <div className="flex justify-between items-center gap-2 py-3 mb-2 border-t border-b border-blue-50 dark:border-slate-800">
-          <div className="w-1/3 flex flex-col items-center">
-            <span className="text-xs text-gray-400 mb-1">Goal</span>
-            <span className="text-blue-900 dark:text-green-200 font-bold">
+        {/* Statistics Columns */}
+        <div className="grid grid-cols-3 py-3 border-y border-slate-200/50 dark:border-slate-800/50 mb-6 text-center">
+          <div>
+            <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest block mb-0.5">Goal</span>
+            <span className="text-slate-800 dark:text-slate-200 font-mono font-bold text-xs">
               ₹{c.targetAmount?.toLocaleString()}
             </span>
           </div>
-          <div className="w-1/3 flex flex-col items-center">
-            <span className="text-xs text-gray-400 mb-1">Left</span>
-            <span className="text-yellow-600 dark:text-yellow-300 font-bold">
+          <div className="border-x border-slate-100 dark:border-slate-800/40">
+            <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest block mb-0.5">Remaining</span>
+            <span className="text-slate-800 dark:text-slate-200 font-mono font-bold text-xs">
               ₹{left.toLocaleString()}
             </span>
           </div>
-          <div className="w-1/3 flex flex-col items-center">
-            <span className="text-xs text-gray-400 mb-1 flex items-center gap-1">
-              <Users className="w-4 h-4 inline" /> Backers
-            </span>
-            <span className="text-blue-700 dark:text-green-300 font-bold">
-              {c.donors && c.donors.length > 0
-                ? `${c.donors.length} backer${c.donors.length > 1 ? "s" : ""}`
-                : "0"}
+          <div>
+            <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest block mb-0.5">Backers</span>
+            <span className="text-slate-800 dark:text-slate-200 font-mono font-bold text-xs">
+              {c.donors && c.donors.length > 0 ? c.donors.length : 0}
             </span>
           </div>
         </div>
 
-        {/* Details Button */}
+        {/* View Details CTA */}
         <Link
           to={`/campaigns/${c._id}`}
-          className="
-            w-full inline-block text-center mt-auto py-2 rounded-xl font-semibold text-white
-            border-2 border-blue-700
-            bg-gradient-to-r from-blue-700 to-green-400
-            transition-all duration-300
-            shadow hover:from-blue-800 hover:to-green-500
-            focus:outline-none focus:ring-2 focus:ring-green-300
-          "
+          className="w-full text-center py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition duration-200 cursor-pointer shadow-sm shadow-indigo-500/10 block mt-auto"
         >
-          <span className="relative z-10 transition-colors duration-200">
-            View Details
-          </span>
+          View Details
         </Link>
       </div>
     </div>

@@ -8,19 +8,18 @@ import Donations from "../../components/dashboard/Donations";
 import Wallet from "../../components/dashboard/Wallet";
 import Badges from "../../components/dashboard/Badges";
 import Analytics from "../../components/dashboard/Analytics";
-import { LogOut, Menu } from "lucide-react";
+import { LogOut, Menu, X, ArrowLeft } from "lucide-react";
 import AddFundsModal from "../../components/modals/AddFundsModal ";
 import { useNavigate } from "react-router-dom";
 import SuccessModal from "../../components/modals/SuccessModal ";
-// If you have a fetchBadges or fetchProfile action, import them here
 
 const sidebarTabs = [
-  { key: "profile", label: "Profile" },
-  { key: "campaigns", label: "Campaigns" },
+  { key: "profile", label: "Profile Details" },
+  { key: "campaigns", label: "My Campaigns" },
   { key: "donations", label: "Contributions" },
-  { key: "wallet", label: "Wallet" },
-  { key: "badges", label: "Badges" },
-  { key: "analytics", label: "Analytics" },
+  { key: "wallet", label: "Wallet & Funds" },
+  { key: "badges", label: "Earned Badges" },
+  { key: "analytics", label: "Impact Analytics" },
 ];
 
 const Dashboard = () => {
@@ -31,7 +30,6 @@ const Dashboard = () => {
   const [lastAdded, setLastAdded] = useState(0);
   const navigate = useNavigate();
 
-  // Stores
   const {
     campaigns,
     fetchCampaigns,
@@ -45,37 +43,24 @@ const Dashboard = () => {
     fetchTransactions,
     isLoading: loadingWallet,
     addFunds,
-    // ...(add fetchBadges if you have badges as separate part of walletStore)
   } = useWalletStore();
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Initial data on mount
   useEffect(() => {
     if (!campaigns.length) fetchCampaigns();
     fetchWalletBalance();
     fetchTransactions();
-    // If you fetch badges or profile on mount, add here
-    // fetchBadges();
-    // fetchProfile();
-  }, []); // only on initial mount
+  }, []);
 
-  // LIVE REFRESH: Fetch data every time tab changes!
   useEffect(() => {
     if (tab === "wallet") {
       fetchWalletBalance();
       fetchTransactions();
     }
-    if (tab === "profile") {
-      // fetchProfile && fetchProfile();
-    }
     if (tab === "campaigns") {
       fetchCampaigns();
     }
-    if (tab === "badges") {
-      // fetchBadges && fetchBadges();
-    }
-    // Add more conditions if you have extra dashboard tabs
   }, [tab]);
 
   const handlelogout = async () => {
@@ -110,162 +95,178 @@ const Dashboard = () => {
   );
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-100 via-white to-blue-100 dark:from-slate-900 dark:via-slate-950 dark:to-blue-950 transition-colors">
-      {/* Mobile Hamburger */}
-      <button
-        className="md:hidden fixed top-5 left-4 z-40 bg-white/90 dark:bg-slate-900/90 border border-blue-200 dark:border-slate-800 rounded-full p-2 shadow-lg"
-        onClick={() => setSidebarOpen(true)}
-        aria-label="Open navigation"
-      >
-        <Menu className="w-7 h-7 text-blue-700 dark:text-green-400" />
-      </button>
-      {/* Sidebar - desktop */}
-      <aside
-        className={`hidden md:flex w-64 min-h-screen flex-col glassy shadow-2xl border-r border-blue-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 px-4 py-7 z-30`}
-      >
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-200 transition-colors duration-200 select-none">
+      {/* Mobile Nav Top Bar */}
+      <div className="md:hidden fixed top-0 left-0 w-full z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur border-b border-slate-200/50 dark:border-white/5 py-4 px-6 flex items-center justify-between shadow-sm">
+        <span className="font-black text-xl tracking-tighter text-slate-900 dark:text-white">
+          FuelFundr<span className="text-indigo-500">.</span>
+        </span>
+        <button
+          className="p-1 text-slate-700 dark:text-slate-350"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Open Navigation"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+      </div>
+
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex w-64 shrink-0 flex-col bg-white dark:bg-[#0b0f17] border-r border-slate-200/50 dark:border-white/5 px-6 py-8">
         {/* Brand */}
-        <div className="mb-10 flex items-center gap-2 select-none">
-          <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-blue-700 to-green-400 bg-clip-text text-transparent">
-            Dashboard
+        <div className="mb-10">
+          <span
+            onClick={() => navigate("/")}
+            className="font-black text-2xl tracking-tighter text-slate-900 dark:text-white cursor-pointer"
+          >
+            FuelFundr<span className="text-indigo-500">.</span>
           </span>
         </div>
-        {/* Tabs */}
-        <nav className="flex flex-col gap-2 flex-1">
-          {sidebarTabs.map(({ key, label }) => (
-            <button
-              key={key}
-              onClick={() => setTab(key)}
-              className={`px-5 py-3 rounded-xl text-left font-bold transition-all duration-150 flex items-center whitespace-nowrap 
-                ${
-                  tab === key
-                    ? "bg-gradient-to-r from-blue-700 to-green-400 text-white shadow-md scale-105"
-                    : "bg-white/60 dark:bg-slate-900/60 text-blue-800 dark:text-green-200 border border-blue-100 dark:border-slate-800 hover:bg-blue-100 dark:hover:bg-blue-800"
-                }
-                outline-none focus:ring-2 focus:ring-green-400`}
-              aria-current={tab === key}
-            >
-              {label}
-            </button>
-          ))}
+
+        {/* Navigation list */}
+        <nav className="flex flex-col gap-1.5 flex-1">
+          {sidebarTabs.map(({ key, label }) => {
+            const active = tab === key;
+            return (
+              <button
+                key={key}
+                onClick={() => setTab(key)}
+                className={`px-4 py-2.5 rounded-lg text-left text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 cursor-pointer
+                  ${
+                    active
+                      ? "bg-slate-100 dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 border-l-2 border-indigo-500"
+                      : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-slate-150"
+                  }
+                `}
+                aria-current={active}
+              >
+                {label}
+              </button>
+            );
+          })}
         </nav>
-        <div className="mt-auto pt-8 flex flex-col gap-2">
+
+        {/* Footer actions */}
+        <div className="mt-auto pt-6">
           <button
             onClick={handlelogout}
-            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-red-400 to-blue-400 text-white font-bold shadow hover:from-red-500 hover:to-blue-700 transition"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 hover:border-rose-500 text-slate-750 dark:text-slate-200 hover:text-rose-500 dark:hover:text-rose-450 bg-white/50 dark:bg-slate-900/50 hover:bg-rose-500/5 transition cursor-pointer text-xs font-mono font-bold uppercase tracking-widest"
           >
-            <LogOut className="w-5 h-5" />
-            Logout
+            <LogOut className="w-4 h-4 text-slate-400" />
+            <span>Logout</span>
           </button>
         </div>
       </aside>
 
-      {/* Drawer Sidebar - mobile */}
+      {/* Mobile Drawer Navigation */}
       <div
-        className={`fixed inset-0 z-50 bg-black/60 transition-all duration-300 ${
-          sidebarOpen ? "block" : "hidden"
+        className={`fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300 ${
+          sidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         } md:hidden`}
         onClick={() => setSidebarOpen(false)}
-      ></div>
+      />
       <aside
-        className={`fixed left-0 top-0 z-50 h-full w-64 flex flex-col glassy shadow-2xl border-r border-blue-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 px-4 py-7 transition-transform duration-300 md:hidden ${
+        className={`fixed left-0 top-0 z-50 h-full w-64 flex flex-col bg-white dark:bg-[#0b0f17] border-r border-slate-200 dark:border-slate-800 px-6 py-8 transition-transform duration-300 md:hidden ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Close area */}
         <button
-          className="absolute top-3 right-3 p-1 text-2xl font-bold text-blue-600 dark:text-green-400"
+          className="absolute top-4 right-4 p-1 text-slate-400 hover:text-slate-650"
           onClick={() => setSidebarOpen(false)}
           aria-label="Close navigation"
         >
-          ×
+          <X className="w-5 h-5" />
         </button>
-        {/* Brand */}
-        <div className="mb-10 flex items-center gap-2 select-none">
-          <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-blue-700 to-green-400 bg-clip-text text-transparent">
-            Dashboard
+
+        <div className="mb-10">
+          <span
+            onClick={() => {
+              setSidebarOpen(false);
+              navigate("/");
+            }}
+            className="font-black text-2xl tracking-tighter text-slate-900 dark:text-white cursor-pointer"
+          >
+            FuelFundr<span className="text-indigo-500">.</span>
           </span>
         </div>
-        <nav className="flex flex-col gap-2 flex-1">
-          {sidebarTabs.map(({ key, label }) => (
-            <button
-              key={key}
-              onClick={() => {
-                setTab(key);
-                setSidebarOpen(false);
-              }}
-              className={`px-5 py-3 rounded-xl text-left font-bold transition-all duration-150 flex items-center whitespace-nowrap 
-                ${
-                  tab === key
-                    ? "bg-gradient-to-r from-blue-700 to-green-400 text-white shadow-md scale-105"
-                    : "bg-white/60 dark:bg-slate-900/60 text-blue-800 dark:text-green-200 border border-blue-100 dark:border-slate-800 hover:bg-blue-100 dark:hover:bg-blue-800"
-                }
-                outline-none focus:ring-2 focus:ring-green-400`}
-              aria-current={tab === key}
-            >
-              {label}
-            </button>
-          ))}
+
+        <nav className="flex flex-col gap-1.5 flex-1">
+          {sidebarTabs.map(({ key, label }) => {
+            const active = tab === key;
+            return (
+              <button
+                key={key}
+                onClick={() => {
+                  setTab(key);
+                  setSidebarOpen(false);
+                }}
+                className={`px-4 py-2.5 rounded-lg text-left text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 cursor-pointer
+                  ${
+                    active
+                      ? "bg-slate-100 dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 border-l-2 border-indigo-500"
+                      : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-slate-150"
+                  }
+                `}
+                aria-current={active}
+              >
+                {label}
+              </button>
+            );
+          })}
         </nav>
-        <div className="mt-auto pt-8 flex flex-col gap-2">
+
+        <div className="mt-auto pt-6">
           <button
             onClick={() => {
               handlelogout();
               setSidebarOpen(false);
             }}
-            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-red-400 to-blue-400 text-white font-bold shadow hover:from-red-500 hover:to-blue-700 transition"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 hover:border-rose-500 text-slate-750 dark:text-slate-200 hover:text-rose-500 dark:hover:text-rose-450 bg-white/50 dark:bg-slate-900/50 hover:bg-rose-500/5 transition cursor-pointer text-xs font-mono font-bold uppercase tracking-widest"
           >
-            <LogOut className="w-5 h-5" />
-            Logout
+            <LogOut className="w-4 h-4 text-slate-400" />
+            <span>Logout</span>
           </button>
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 p-6 md:p-8 overflow-auto">
-        <div className="mb-5">
+      {/* Main Content Pane */}
+      <main className="flex-1 px-6 md:px-10 py-24 md:py-10 overflow-y-auto w-full">
+        {/* Navigation / Back header action */}
+        <div className="mb-8">
           <button
             onClick={() => navigate("/")}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-700 to-green-400 text-white font-bold shadow hover:from-blue-800 hover:to-green-700 transition text-base"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 hover:border-indigo-500 bg-white/50 dark:bg-slate-900/50 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-200 text-xs font-semibold cursor-pointer shadow-sm transition"
           >
-            <svg
-              className="w-5 h-5 mr-1"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path
-                d="M13 15l-5-5 5-5"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              ></path>
-            </svg>
-            Back
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Home</span>
           </button>
         </div>
-        {tab === "profile" && <Profile user={user} />}
-        {tab === "campaigns" && (
-          <Campaigns campaigns={myCampaigns} loading={loadingCampaigns} />
-        )}
-        {tab === "donations" && (
-          <Donations donations={userDonations} loading={loadingCampaigns} />
-        )}
-        {tab === "wallet" && (
-          <Wallet
-            balance={walletBalance}
-            transactions={transactions}
-            loading={loadingWallet}
-            onAddFunds={() => setModalOpen(true)}
-          />
-        )}
-        {tab === "badges" && <Badges badges={user.badges} />}
-        {tab === "analytics" && (
-          <Analytics
-            user={user}
-            campaigns={myCampaigns}
-            transactions={transactions}
-          />
-        )}
+
+        {/* Tab Components */}
+        <div className="w-full max-w-5xl mx-auto">
+          {tab === "profile" && <Profile user={user} />}
+          {tab === "campaigns" && (
+            <Campaigns campaigns={myCampaigns} loading={loadingCampaigns} />
+          )}
+          {tab === "donations" && (
+            <Donations donations={userDonations} loading={loadingCampaigns} />
+          )}
+          {tab === "wallet" && (
+            <Wallet
+              balance={walletBalance}
+              transactions={transactions}
+              loading={loadingWallet}
+              onAddFunds={() => setModalOpen(true)}
+            />
+          )}
+          {tab === "badges" && <Badges badges={user.badges} />}
+          {tab === "analytics" && (
+            <Analytics
+              user={user}
+              campaigns={myCampaigns}
+              transactions={transactions}
+            />
+          )}
+        </div>
       </main>
 
       <AddFundsModal

@@ -1,5 +1,31 @@
+# ==========================================
+# Environment Variables & Secrets (CRITICAL)
+# ==========================================
+.env
+.env.*
+*.env
+!.env.example
+*.pem
+*.key
+*.crt
+*.pfx
+secrets/
+config.local.json
+
+# ==========================================
+# Node.js Dependencies & Builds
+# ==========================================
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+dist-ssr/
+build/
+.npm/
+.eslintcache
+
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,21 +33,33 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-build
+# ==========================================
+# Python Environment & Cache (ai-service)
+# ==========================================
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.pyc
 
-.env
-
-# Editor directories and files
+# ==========================================
+# OS & Editor Directories / Files
+# ==========================================
+.DS_Store
+Thumbs.db
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+*.tmp
