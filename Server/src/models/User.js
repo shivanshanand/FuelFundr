@@ -27,6 +27,7 @@ const UserSchema = new mongoose.Schema(
     },
     walletBalance: { type: Number, default: 0 },
     totalDonated: { type: Number, default: 0 },
+    aiUsageCount: { type: Number, default: 0 },
     socials: {
       linkedin: { type: String, default: "" },
       twitter: { type: String, default: "" },

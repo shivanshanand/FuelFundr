@@ -42,3 +42,4 @@ class CampaignInput(BaseModel):
     category: CategoryEnum
     tone: ToneEnum = ToneEnum.INSPIRING
     length: LengthEnum = LengthEnum.MEDIUM
+    custom_api_key: Optional[str] = None

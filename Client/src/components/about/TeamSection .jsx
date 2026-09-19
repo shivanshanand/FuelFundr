@@ -1,11 +1,12 @@
 import { getInitials } from "../../utils/initials";
 import { Sparkles } from "lucide-react";
+import FounderImg from "../../../assets/Founder.png";
 
 const founder = {
   name: "Shivansh Anand",
   role: "Founder & Lead Developer",
   bio: "Coding, designing, and building for the next generation of student makers. Focused on campus hackathons & community-led growth.",
-  img: "/assets/Founder.png",
+  img: FounderImg,
 };
 
 const founderQuote = `

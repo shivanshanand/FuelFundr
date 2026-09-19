@@ -12,7 +12,7 @@ export const getWalletBalance = async (req, res) => {
 
     res.json({ walletBalance: user.walletBalance });
   } catch (error) {
-    console.error("Error fetching wallet balance:", error);
+
     res.status(500).json({ message: "Error fetching wallet balance" });
   }
 };
@@ -80,7 +80,7 @@ export const addFundsToWallet = async (req, res) => {
       walletBalance: user.walletBalance,
     });
   } catch (error) {
-    console.error("Error adding funds:", error);
+
     res.status(500).json({ message: "Error adding funds" });
   }
 };
@@ -117,7 +117,7 @@ export const withdrawFundsFromWallet = async (req, res) => {
       walletBalance: user.walletBalance,
     });
   } catch (error) {
-    console.error("Error withdrawing funds:", error);
+
     res.status(500).json({ message: "Error withdrawing funds" });
   }
 };
@@ -129,7 +129,7 @@ export const getWalletTransactions = async (req, res) => {
     }).sort({ createdAt: -1 });
     res.status(200).json(transactions);
   } catch (error) {
-    console.error("Error fetching transactions:", error);
+
     res.status(500).json({ message: "Failed to load transaction history" });
   }
 };
@@ -158,7 +158,7 @@ export const getTotalDonatedByUser = async (req, res) => {
     const total = result.length > 0 ? result[0].total : 0;
     res.status(200).json({ totalDonated: total });
   } catch (error) {
-    console.error("Error getting total donated:", error);
+
     res.status(500).json({ message: "Failed to calculate total donated" });
   }
 };

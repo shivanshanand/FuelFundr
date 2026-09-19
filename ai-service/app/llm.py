@@ -124,9 +124,11 @@ def generate_campaign_text(data):
 
     prompt = build_prompt(data)
 
+    current_client = Groq(api_key=data.custom_api_key) if data.custom_api_key else client
+
     try:
-        response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+        response = current_client.chat.completions.create(
+            model="openai/gpt-oss-120b",
             temperature=0.7,
             messages=[
                 {

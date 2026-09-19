@@ -13,6 +13,8 @@ const DetailsStep = ({
   const [tone, setTone] = useState("Inspiring");
   const [length, setLength] = useState("medium");
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
+  const [customGroqKey, setCustomGroqKey] = useState("");
 
   // Manage image preview URL creation and cleanup
   useEffect(() => {
@@ -111,12 +113,18 @@ const DetailsStep = ({
           description: campaignData.description,
           tone,
           length,
+          customGroqKey: customGroqKey || undefined,
         }),
       });
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.message);
+      if (!res.ok) {
+        if (res.status === 403) {
+          setShowApiKeyInput(true);
+        }
+        throw new Error(data.message);
+      }
 
       updateCampaignData("description", data.content);
 
@@ -226,6 +234,22 @@ const DetailsStep = ({
             {aiLoading ? "Generating..." : "AI Rewrite"}
           </button>
         </div>
+
+        {/* Custom API Key Input for Rate Limit */}
+        {showApiKeyInput && (
+          <div className="mt-2 p-3 rounded-lg border border-rose-200 dark:border-rose-900/50 bg-rose-50 dark:bg-rose-950/20">
+            <p className="text-xs text-rose-600 dark:text-rose-400 font-semibold mb-2">
+              You've reached your free AI limit (5 uses). Please enter your own Groq API key to continue.
+            </p>
+            <input
+              type="password"
+              placeholder="gsk_..."
+              value={customGroqKey}
+              onChange={(e) => setCustomGroqKey(e.target.value)}
+              className="w-full px-3 py-2 rounded-md bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-rose-200 dark:border-rose-800 text-xs outline-none focus:ring-1 focus:ring-rose-500"
+            />
+          </div>
+        )}
       </div>
 
       {/* Image Upload */}

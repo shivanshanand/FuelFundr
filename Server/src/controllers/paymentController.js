@@ -21,7 +21,7 @@ export const createOrder = async (req, res) => {
     const order = await razorpay.orders.create(options);
     res.json(order);
   } catch (err) {
-    console.error("Order creation failed:", err);
+
     res.status(500).json({ message: "Order creation failed" });
   }
 };
@@ -41,7 +41,7 @@ export const createOrderGuest = async (req, res) => {
     const order = await razorpay.orders.create(options);
     res.json(order);
   } catch (err) {
-    console.error("Order creation failed:", err);
+
     res.status(500).json({ message: "Order creation failed" });
   }
 };

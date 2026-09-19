@@ -91,7 +91,7 @@ export const useCampaignStore = create((set) => ({
       useWalletStore.getState().fetchTransactions();
 
       if (res.data.newBadges?.length) {
-        console.log("New Badges returned:", res.data.newBadges); // <--- Debug!
+
 
         set({
           badgeModalVisible: true,

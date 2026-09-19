@@ -67,11 +67,11 @@ export const createCampaign = async (req, res) => {
     // Determine which badges were newly unlocked
     const newBadges = badgesAfter.filter((b) => !badgesBefore.includes(b));
 
-    console.log("badge unlocked", newBadges);
+
 
     res.status(201).json({ campaign: newCampaign, newBadges });
   } catch (error) {
-    console.error("Error creating campaign:", error);
+
     res.status(500).json({ message: "Error creating campaign", error });
   }
 };
@@ -193,7 +193,7 @@ export const withdrawFundsFromCampaign = async (req, res) => {
       campaign: updatedCampaign,
     });
   } catch (error) {
-    console.error("Error withdrawing funds:", error);
+
     res.status(500).json({ message: "Withdrawal failed", error });
   }
 };
@@ -298,7 +298,7 @@ export const guestDonateHandler = async (req, res) => {
       donorEmail,
     } = req.body;
 
-    console.log("[GUEST DONATE BODY]", req.body);
+
 
     if (!amount || amount <= 0) {
       return res.status(400).json({ message: "Invalid amount" });
@@ -364,7 +364,7 @@ export const guestDonateHandler = async (req, res) => {
       campaign: updatedCampaign,
     });
   } catch (error) {
-    console.error("Guest donation error -->", error);
+
     res.status(500).json({ message: "Error processing donation", error });
   }
 };
