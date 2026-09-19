@@ -7,7 +7,7 @@
 ## 🌟 Key Features & Highlights
 
 ### 🤖 1. AI-Powered Campaign Generator
-- **Smart Copywriting Microservice**: Powered by Python FastAPI & Groq LLM (`llama-3.3-70b-versatile`) to generate high-converting campaign titles, taglines, and detailed descriptions.
+- **Smart Copywriting Microservice**: Powered by Python FastAPI & Groq LLM (`openai/gpt-oss-120b`) to generate high-converting campaign titles, taglines, and detailed descriptions.
 - **Customizable Tone & Length**: Tailors campaign messaging across multiple tones (*Inspiring, Professional, Casual, Urgency-driven, Storytelling*) and length configurations.
 
 ### 💳 2. Financial Ecosystem & Razorpay Integration
@@ -50,7 +50,7 @@
 ### AI Service (`/ai-service`)
 - **Framework**: Python 3.12+, FastAPI, Uvicorn
 - **Data Validation**: Pydantic v2
-- **AI Engine**: Groq SDK (`llama-3.3-70b-versatile`)
+- **AI Engine**: Groq SDK (`openai/gpt-oss-120b`)
 
 ---
 
@@ -169,12 +169,16 @@ GMAIL_USER=your_email@gmail.com
 GMAIL_PASS=your_app_password
 RESEND_API_KEY=your_resend_api_key
 
-# Google OAuth 2.0
+# Google OAuth 2.0 (Note: callbackURL now uses SERVER_URL env variable instead of hardcoded localhost)
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 # AI Service Link
 GROQ_API_KEY=your_groq_api_key
+
+# Deployment & Routing
+SERVER_URL=http://your-ec2-public-ip:2727
+AI_SERVICE_URL=http://localhost:8000
 ```
 
 #### Frontend (`/Client/.env`)
@@ -224,6 +228,22 @@ npm install
 npm run dev
 ```
 *Client runs at `http://localhost:5173`*
+
+#### Step D: Run with PM2 (Production)
+```bash
+pm2 start "node src/index.js" --name fuelfundr-server
+pm2 start "uvicorn app.main:app --host 0.0.0.0 --port 8000" --name fuelfundr-ai
+pm2 save
+```
+
+---
+
+## ☁️ AWS Deployment
+
+- **EC2 instance (Ubuntu)** hosting the Node.js backend + Python AI microservice
+- **PM2 process manager** running `fuelfundr-server` and `fuelfundr-ai`
+- **Backend running on port 2727**, **AI service on port 8000**
+- **Environment variable `SERVER_URL`** added to `Server/.env` for dynamic callback URLs
 
 ---
 

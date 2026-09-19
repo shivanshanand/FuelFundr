@@ -99,7 +99,7 @@ export const getLeaderboard = async (req, res) => {
 
     return res.status(400).json({ message: "Invalid leaderboard type" });
   } catch (error) {
-    console.error("Leaderboard error", error);
+
     res.status(500).json({ message: "Error fetching leaderboard" });
   }
 };

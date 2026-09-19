@@ -17,7 +17,7 @@ export const useWalletStore = create((set) => ({
       });
       set({ walletBalance: res.data.walletBalance });
     } catch (err) {
-      console.error("Fetch Wallet Balance Error", err);
+
     }
   },
 
@@ -28,7 +28,7 @@ export const useWalletStore = create((set) => ({
       });
       set({ transactions: res.data });
     } catch (err) {
-      console.error("Fetch Transactions Error", err);
+
     }
   },
 
@@ -74,7 +74,7 @@ export const useWalletStore = create((set) => ({
 
               resolve(); // Important
             } catch (err) {
-              console.error("Payment verification failed:", err);
+
               set({
                 error: "Payment verified failed",
                 isLoading: false,
@@ -97,12 +97,12 @@ export const useWalletStore = create((set) => ({
           },
         });
 
-        console.log("order details: ", amount, order.amount, order.id);
+
 
         razorpay.open();
       });
     } catch (err) {
-      console.error("Add Funds Error", err);
+
       set({ isLoading: false, error: "Payment failed or cancelled" });
     }
   },
